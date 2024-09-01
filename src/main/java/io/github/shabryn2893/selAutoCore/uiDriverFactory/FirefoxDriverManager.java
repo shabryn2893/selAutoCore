@@ -1,4 +1,4 @@
-package io.github.shabryn2893.selAutoCore.driverFactory;
+package io.github.shabryn2893.selAutoCore.uiDriverFactory;
 
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.firefox.FirefoxDriver;

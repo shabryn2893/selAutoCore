@@ -1,6 +1,6 @@
-package io.github.shabryn2893.selAutoCore.core;
+package io.github.shabryn2893.selAutoCore.uiCore;
 
-public class ToolFactory {
+public class UIToolFactory {
 	
 	static IActionUI actionUI=null;
 
@@ -9,7 +9,7 @@ public class ToolFactory {
 		switch (toolName.toUpperCase()) {
 		case "SELENIUM":{
 			System.out.println("Create Instance for "+toolName);
-			actionUI = new UiActionsSelenium();
+			actionUI = new UIActionsSelenium();
 			break;
 		}
 		default:{

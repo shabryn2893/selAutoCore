@@ -1,4 +1,4 @@
-package io.github.shabryn2893.selAutoCore.driverFactory;
+package io.github.shabryn2893.selAutoCore.uiDriverFactory;
 
 public class DriverManagerFactory {
 	public static DriverManager getManager(String browserType) {

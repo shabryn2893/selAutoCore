@@ -1,4 +1,4 @@
-package io.github.shabryn2893.selAutoCore.core;
+package io.github.shabryn2893.selAutoCore.uiCore;
 
 import java.io.File;
 import java.time.Duration;
@@ -23,10 +23,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
 
-import io.github.shabryn2893.selAutoCore.driverFactory.DriverManager;
-import io.github.shabryn2893.selAutoCore.driverFactory.DriverManagerFactory;
+import io.github.shabryn2893.selAutoCore.uiDriverFactory.DriverManager;
+import io.github.shabryn2893.selAutoCore.uiDriverFactory.DriverManagerFactory;
 
-public class UiActionsSelenium implements IActionUI {
+public class UIActionsSelenium implements IActionUI {
 
 	private DriverManager driverManager;
 	private WebDriver driver;
