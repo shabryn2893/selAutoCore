@@ -44,6 +44,8 @@
 		<!-- Dependencies Version-->
 		<selenium.version>4.23.0</selenium.version>
 		<commonio.version>2.6</commonio.version>
+		<restassured.version>5.3.1</restassured.version>
+		<json.version>20230227</json.version>
 		<!-- Plugins version -->
 		<central-publishing-maven-plugin.version>0.5.0</central-publishing-maven-plugin.version>
 		<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
@@ -53,6 +55,7 @@
 	</properties>
 
 	<dependencies>
+		<!-- UI Handling Jars Start -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
@@ -63,6 +66,21 @@
 			<artifactId>commons-io</artifactId>
 			<version>${commonio.version}</version>
 		</dependency>
+		<!-- UI Handling Jars End -->
+		
+		<!-- API Handling Jars Start -->
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>${restassured.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
+		</dependency>
+		<!-- API Handling Jars End -->
 	</dependencies>
 
 	<build>
