@@ -7,7 +7,6 @@
 	<groupId>io.github.shabryn2893</groupId>
 	<artifactId>selAutoCore</artifactId>
 	<version>0.0.1</version>
-	<packaging>jar</packaging>
 
 	<name>selAutoCore</name>
 	<description>selAutoCore is libray which has capacity to automated Web
@@ -39,7 +38,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.release>17</maven.compiler.release>
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- Dependencies Version-->
 		<selenium.version>4.23.0</selenium.version>
@@ -51,7 +50,6 @@
 		<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-
 	</properties>
 
 	<dependencies>
@@ -67,7 +65,7 @@
 			<version>${commonio.version}</version>
 		</dependency>
 		<!-- UI Handling Jars End -->
-		
+
 		<!-- API Handling Jars Start -->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
@@ -109,7 +107,6 @@
 					</executions>
 
 				</plugin>
-
 				<!-- GPG Signed Components pom, .asc-->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -154,6 +151,43 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.4.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.3.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.13.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.4.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.1.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.12.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>3.6.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
