@@ -1,4 +1,4 @@
-package io.github.shabryn2893.selAutoCore.core;
+package io.github.shabryn2893.selAutoCore.uiCore;
 
 import org.openqa.selenium.Keys;
 
