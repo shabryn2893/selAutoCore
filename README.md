@@ -1,4 +1,6 @@
-# Please do add below dependency to use my library: selAutoCore
+## Please do add below dependency to use my library : selAutoCore
+
+```xml
 <dependency>
     <groupId>io.github.shabryn2893</groupId>
     <artifactId>selAutoCore</artifactId>
