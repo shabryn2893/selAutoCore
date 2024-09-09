@@ -17,7 +17,6 @@ public class ChromeDriverManager extends DriverManager{
 		options.setExperimentalOption("excludeSwitches", List.of("disable-popup-blocking"));
 		if(isHeadlessMode==true) {options.addArguments("--headless");}
 		driver=new ChromeDriver(options);
-		
 	}
 
 }
