@@ -4,7 +4,14 @@ public class UIToolFactory {
 	
 	static IActionUI actionUI=null;
 
-	
+	/**
+	 * Get the tool instance
+	 *
+	 * @param toolName - This can accept values like SELENIUM.
+	 * @return It return IActionUI reference.
+	 * @example
+	 * getToolInstance("SELENIUM");
+	 */
 	public static IActionUI getToolInstance(String toolName) {
 		switch (toolName.toUpperCase()) {
 		case "SELENIUM":{

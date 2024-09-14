@@ -4,6 +4,15 @@ import org.openqa.selenium.Keys;
 
 public class KeysName {
 	
+	
+	/**
+	 * Get the Keys
+	 *
+	 * @param keyName - This can accept values like ENTER,TAB,CTRL,ALT,ESCAPE or SHIFT.
+	 * @return It return Keys reference.
+	 * @example
+	 * getKey("ENTER");
+	 */
 	public static Keys getKey(String keyName) {
 		Keys key = null;
 		switch(keyName.toUpperCase()) {

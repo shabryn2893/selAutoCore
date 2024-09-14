@@ -6,7 +6,7 @@
 
 	<groupId>io.github.shabryn2893</groupId>
 	<artifactId>selAutoCore</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>selAutoCore is libray which has capacity to automated Web

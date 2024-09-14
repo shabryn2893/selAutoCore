@@ -35,6 +35,15 @@ public class UIActionsSelenium implements IActionUI {
 	private JavascriptExecutor jExecutor = null;
 	private Actions action=null;
 
+	/**
+	 * Initiate browser based on the parameter passed
+	 *
+	 * @param browserType - This can accept values like CHROME,FIREFOX or EDGE.
+	 * @param isHeadlessMode - This can accept values like true or false.
+	 * @return It does not return anything.
+	 * @example
+	 * initializeDriver("CHROME",false);
+	 */
 	@Override
 	public void initializeDriver(String browserType, boolean isHeadlessMode) {
 		driverManager = DriverManagerFactory.getManager(browserType);
@@ -44,23 +53,54 @@ public class UIActionsSelenium implements IActionUI {
 		driver.manage().window().maximize();
 		driver.manage().deleteAllCookies();
 	}
-
+	
+	/**
+	 * Close the current opened tab or window.
+	 *
+	 * @return It does not return anything.
+	 * @example
+	 * closeCurrentTabWindow();
+	 */
 	@Override
 	public void closeCurrentTabWindow() {
 		driver.close();
 	}
-
+	
+	/**
+	 * Close the browse window.
+	 *
+	 * @return It does not return anything.
+	 * @example
+	 * closeBrowser();
+	 */
 	@Override
 	public void closeBrowser() {
 		driverManager.quitDriver();
 	}
 
+	/**
+	 * Open the url in the browser window.
+	 * @param url - This take application url as parameter
+	 * @return It does not return anything.
+	 * @example
+	 * openURL("https://www.google.com");
+	 */
 	@Override
 	public void openURL(String url) {
 		System.out.println("Opening url:" + url);
 		driver.get(url);
 	}
-
+	
+	/**
+	 * Click on any web element.
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param maxWaitTime -maximum waiting to perform click. 
+	 * @return It does not return anything.
+	 * @example
+	 * click("XPATH","//button[@name='login']",100);
+	 */
 	@Override
 	public void click(String locatorType, String locatorValue,int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue,maxWaitTime)) {
@@ -72,7 +112,18 @@ public class UIActionsSelenium implements IActionUI {
 			assert false;
 		}
 	}
-
+	
+	/**
+	 * Enter text inside the web element: textbox or textarea .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param textToEnter - Value that you want to type inside textbox or textarea
+	 * @param maxWaitTime -maximum waiting to enter text. 
+	 * @return It does not return anything.
+	 * @example
+	 * type("XPATH","//input[@name='username']","abc",100);
+	 */
 	@Override
 	public void type(String locatorType, String locatorValue, String textToEnter,int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue,maxWaitTime)) {
@@ -85,6 +136,17 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Wait any web element until specific condition is matched.
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param conditionName - This can values like CLICKABLE,INVISIBLE,VISIBLE or SELECTED
+	 * @param maxWaitTime -maximum waiting to match specific condition.
+	 * @return It does not return anything.
+	 * @example
+	 * waitUntill("XPATH","//button[@name='login']","VISIBLE",100);
+	 */
 	@Override
 	public void waitUntill(String locatorType, final String locatorValue, final String conditionName,int maxWaitTime) {
 		try {
@@ -123,6 +185,19 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Apply Fluent wait to any web element
+	 * @param function take function as parameter
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It does not return anything.
+	 * @example
+	 * Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
+				public Boolean apply(WebDriver driver) {
+				your actions.
+				}
+		}
+	 * setFluentWait(function,100);
+	 */
 	public void setFluentWait(Function<WebDriver, Boolean> function,int maxWaitTime) {
 		FluentWait<WebDriver> fluentWait = new FluentWait<WebDriver>(driver);
 		fluentWait.pollingEvery(Duration.ofMillis(500));
@@ -131,12 +206,34 @@ public class UIActionsSelenium implements IActionUI {
 		fluentWait.until(function);
 	}
 
+
+	/**
+	 * Apply Web Driver Wait to any web element
+	 * @param function take function as parameter
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It does not return anything.
+	 * @example
+	 * * Function<WebDriver, Boolean> function = new Function<WebDriver, Boolean>() {
+				public Boolean apply(WebDriver driver) {
+				your actions.
+				}
+		}
+	 * setWebDriverWait(function,100);
+	 */
 	public void setWebDriverWait(Function<WebDriver, Boolean> function, int maxWaitTime) {
 		Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(maxWaitTime));
 		wait.until(function);
 
 	}
 	
+	/**
+	 * Wait for the page load.
+	 *
+	 * @param time - waiting time for page load.
+	 * @return It does not return anything.
+	 * @example
+	 * waitForPageLoad(100);
+	 */
 	@Override
 	public void waitForPageLoad(int time) {
 
@@ -151,6 +248,14 @@ public class UIActionsSelenium implements IActionUI {
 		setWebDriverWait(function, time);
 	}
 
+	/**
+	 * Wait for the page load.
+	 *
+	 * @param seconds - hard wait time for web element.
+	 * @return It does not return anything.
+	 * @example
+	 * waitForElement(10);
+	 */
 	@Override
 	public void waitForElement(int seconds) {
 		int time = seconds * 1000;
@@ -163,6 +268,16 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Checks whether web element is displayed or enabled or selected.
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param stateType - This can values like DISPLAYED,ENABLED,SELECTED
+	 * @return It does not return anything.
+	 * @example
+	 * isElementDisplayedOrEnabledOrSelected("XPATH","//button[@name='login']","DISPLAYED");
+	 */
 	@Override
 	public boolean isElementDisplayedOrEnabledOrSelected(String locatorType, String locatorValue, String stateType) {
 		element = findElement(locatorType, locatorValue);
@@ -187,6 +302,17 @@ public class UIActionsSelenium implements IActionUI {
 		return status;
 	}
 
+	/**
+	 * Gets the attribute value based on the attribute name of the web element.
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param attributeName - This can values like value,class,id
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It does not return anything.
+	 * @example
+	 * getAttributeValue("XPATH","//button[@name='login']","value",100);
+	 */
 	@Override
 	public String getAttributeValue(String locatorType, String locatorValue, String attributeName,int maxWaitTime) {
 		String attributeValue = null;
@@ -201,12 +327,27 @@ public class UIActionsSelenium implements IActionUI {
 		return attributeValue;
 	}
 
+	/**
+	 * Gets the current url.
+	 * 
+	 * @return It does not return anything.
+	 * @example
+	 * getURL();
+	 */
 	@Override
 	public String getURL() {
 		return driver.getCurrentUrl();
 
 	}
 
+	/**
+	 * Takes the screenshot of the visible web page.
+	 * 
+	 * @param screenshotPath -location where to store screenshot
+	 * @return It returns screenshot in BASE64 format.
+	 * @example
+	 * takeScreenshot("./screenshot/abc.jpeg");
+	 */
 	@Override
 	public String takeScreenshot(String screenshotPath) {
 		String screenshot = null;
@@ -219,7 +360,17 @@ public class UIActionsSelenium implements IActionUI {
 
 		return screenshot;
 	}
-
+	
+	/**
+	 * Takes the screenshot of the specific web element.
+	 * 
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param screenshotPath -location where to store screenshot
+	 * @return It returns screenshot in BASE64 format.
+	 * @example
+	 * takeScreenshot("XPATH","//button[@name='login']","./screenshot/abc.jpeg");
+	 */
 	@Override
 	public String takeScreenshot(String locatorType, String locatorValue, String screenshotPath) {
 		String screenshot = null;
@@ -233,6 +384,16 @@ public class UIActionsSelenium implements IActionUI {
 		return screenshot;
 	}
 
+	/**
+	 * Perform click using javaScript executor.
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It does not return anything.
+	 * @example
+	 * jsClick("XPATH","//button[@name='login']","value",100);
+	 */
 	@Override
 	public void jsClick(String locatorType, String locatorValue,int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue,maxWaitTime)) {
@@ -245,6 +406,16 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 	
+	/**
+	 * Gets the text of any web element except text-box .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It returns web element text.
+	 * @example
+	 * getText("XPATH","//button[@name='login']",100);
+	 */
 	@Override
 	public String getText(String locatorType, String locatorValue,int maxWaitTime) {
 		String textValue = null;
@@ -258,6 +429,18 @@ public class UIActionsSelenium implements IActionUI {
 		return textValue;
 	}
 	
+	/**
+	 * Perform scroll operation till specific web element .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	 * @param scrollType-NORMAL- Perform using Action class 
+ 						JS - Perform using JavaScript Executor
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It does not return anything.
+	 * @example
+	 * scrollToElement("XPATH","//button[@name='login']","JS",100);
+	 */
 	@Override
 	public void scrollToElement(String locatorType, String locatorValue, String scrollType,int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue,maxWaitTime)) {
@@ -275,6 +458,16 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 	
+	/**
+	 * Checks for web element presence in the DOM .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	
+	 * @return It returns element state in form of true or false.
+	 * @example
+	 * isElementPresent("XPATH","//button[@name='login']");
+	 */
 	@Override
 	public boolean isElementPresent(String locatorType, String locatorValue) {
 		boolean status = false;
@@ -288,6 +481,16 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Locate web element in the DOM .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	
+	 * @return It returns web element  if finds else throw NoSuchElementException.
+	 * @example
+	 * findElement("XPATH","//button[@name='login']");
+	 */
 	@Override
 	public WebElement findElement(String locatorType, String locatorValue) {
 		WebElement element = null;
@@ -341,6 +544,16 @@ public class UIActionsSelenium implements IActionUI {
 		return element;
 	}
 
+	/**
+	 * Locate web elements in the DOM .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	
+	 * @return It returns List of match web elements if find, else return empty list.
+	 * @example
+	 * findElements("XPATH","//button[@name='login']");
+	 */
 	@Override
 	public List<WebElement> findElements(String locatorType, String locatorValue) {
 		List<WebElement> elements = null;
@@ -383,6 +596,16 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Wait till specific web element appears in the DOM.
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It returns boolean value true or false.
+	 * @example
+	 * waitUntillElementAppear("XPATH","//button[@name='login']",100);
+	 */
 	@Override
 	public boolean waitUntillElementAppear(String locatorType, String locatorValue,int maxWaitTime) {
 		boolean status = true;
@@ -407,6 +630,16 @@ public class UIActionsSelenium implements IActionUI {
 		return status;
 	}
 
+	/**
+	 * Wait till specific web element disappears from the DOM.
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It returns boolean value true or false.
+	 * @example
+	 * waitUntillElementDisappear("XPATH","//button[@name='login']",100);
+	 */
 	@Override
 	public boolean waitUntillElementDisappear(String locatorType, String locatorValue,int maxWaitTime) {
 		boolean status = true;
@@ -431,6 +664,14 @@ public class UIActionsSelenium implements IActionUI {
 		return status;
 	}
 
+	/**
+	 * Perform navigation operation like page forward,back or refresh.
+	 * 
+	 * @param direction - This can have values like FORWARD,BACK, or REFRESH
+	 * @return It does not returns anything.
+	 * @example
+	 * navigateTo("FORWARD");
+	 */
 	@Override
 	public void navigateTo(String direction) {
 
@@ -453,12 +694,29 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Switch on the opened tab or window based on index value.
+	 * 
+	 * @param windowTabIndex - accept integer value
+	 * @return It does not returns anything.
+	 * @example
+	 * switchToOpenedTabWindow(0);
+	 */
 	@Override
 	public void switchToOpenedTabWindow(int windowTabIndex) {
 		ArrayList<String> openWindows = new ArrayList<>(driver.getWindowHandles());
 		driver.switchTo().window(openWindows.get(windowTabIndex));
 	}
 
+	/**
+	 * Opens new tab or window and switch to it.
+	 * 
+	 * @param type - WINDOW=Opens new window
+	 * 				TAB=Opens new tab
+	 * @return It does not returns anything.
+	 * @example
+	 * createNewWindowTabSwitch("WINDOW");
+	 */
 	@Override
 	public void createNewWindowTabSwitch(String type) {
 		if (type.equalsIgnoreCase("WINDOW")) {
@@ -468,6 +726,16 @@ public class UIActionsSelenium implements IActionUI {
 		}
 	}
 
+	/**
+	 * Perform mouse hover action on specific web element .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It does not return anything.
+	 * @example
+	 * hoverElement("XPATH","//button[@name='login']",100);
+	 */
 	@Override
 	public void hoverElement(String locatorType, String locatorValue,int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue,maxWaitTime)) {
@@ -480,6 +748,16 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Perform mouse right click action on specific web element .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It does not return anything.
+	 * @example
+	 * rightClickElement("XPATH","//button[@name='login']",100);
+	 */
 	@Override
 	public void rightClickElement(String locatorType, String locatorValue,int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue,maxWaitTime)) {
@@ -492,6 +770,16 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Perform mouse double click action on specific web element .
+	 *
+	 * @param locatorType - This can have values like ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	 * @param maxWaitTime - maximum waiting time.
+	 * @return It does not return anything.
+	 * @example
+	 * doubleClickElement("XPATH","//button[@name='login']",100);
+	 */
 	@Override
 	public void doubleClickElement(String locatorType, String locatorValue,int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue,maxWaitTime)) {
@@ -504,16 +792,39 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
+	/**
+	 * Gets title of web page
+	 *
+	 * @return It return title of page in string format.
+	 * @example
+	 * getPageTitle();
+	 */
 	@Override
 	public String getPageTitle() {
 		return driver.getTitle();
 	}
 
+	/**
+	 * Switches back  to Parent Tab or Window or Iframe.
+	 *
+	 * @return It does not return anything.
+	 * @example
+	 * switchToParenTabWindowIframe();
+	 */
 	@Override
 	public void switchToParenTabWindowIframe() {
 		driver.switchTo().defaultContent();
 	}
 
+	/**
+	 * Perform switch to iFrame.
+	 *
+	 * @param locatorType - This can have values like INDEX,NAMEORID,ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.d
+	 * @return It does not return anything.
+	 * @example
+	 * switchFrame("INDEX","0");
+	 */
 	@Override
 	public void switchFrame(String locatorType, String locatorValue) {
 
@@ -530,16 +841,45 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 	
+	/**
+	 * Perform drag and drop mouse action.
+	 *
+	 * @param locatorType - This can have values like INDEX,NAMEORID,ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param sourceLocatorValue - Here you need to pass locator value based on the locator type selected.This source web element.
+	 * @param targetLocatorValue - Here you need to pass locator value based on the locator type selected.This target web element.
+	 * @return It does not return anything.
+	 * @example
+	 * dragAndDrop("XPATH","//div[@id='source']","//div[@id='target']");
+	 */
 	@Override
 	public void dragAndDrop(String locatorType, String sourceLocatorValue,String targetLocatorValue) {
 		action.dragAndDrop(this.findElement(locatorType, sourceLocatorValue), this.findElement(locatorType, targetLocatorValue)).perform();
 	}
 	
+	/**
+	 * Perform keyboard typing action.
+	 *
+	 * @param locatorType - This can have values like INDEX,NAMEORID,ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the locator type selected.
+	 * @param textToType - text to type.
+	 * @return It does not return anything.
+	 * @example
+	 * typeUsingKeyboard("XPATH","//input[@id='username']","Welcome");
+	 */
 	@Override
 	public void typeUsingKeyboard(String locatorType, String locatorValue,String textToType) {
 		action.click(this.findElement(locatorType, locatorValue)).sendKeys(textToType).perform();
 	}
 	
+	/**
+	 * Perform keyboard action.
+	 *
+	 * @param combinationKeysName - CTRL+C,CTRL+V,ENTER,TAB,A,B,C,D. etc...
+	 * @return It does not return anything.
+	 * @example
+	 * pressKeyCombination("CTRL,C");
+	 * pressKeyCombination("ENTER");
+	 */
 	@Override
 	public void pressKeyCombination(String combinationKeysName) {
 		if(combinationKeysName.contains(",")) {
