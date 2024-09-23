@@ -6,7 +6,7 @@
 
 	<groupId>io.github.shabryn2893</groupId>
 	<artifactId>selAutoCore</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>selAutoCore is libray which has capacity to automated Web
@@ -47,6 +47,12 @@
 		<testng.version>7.10.2</testng.version>
 		<restassured.version>5.3.1</restassured.version>
 		<json.version>20230227</json.version>
+		<poi.version>5.2.3</poi.version>
+		<poiooxml.version>5.2.3</poiooxml.version>
+		<xmlbeans.version>5.2.1</xmlbeans.version>
+		<mysql.version>8.0.33</mysql.version>
+		<slf4j-api.version>2.0.16</slf4j-api.version>
+		<logback-classic.version>1.5.8</logback-classic.version>
 		<!-- Plugins version -->
 		<central-publishing-maven-plugin.version>0.5.0</central-publishing-maven-plugin.version>
 		<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
@@ -87,6 +93,47 @@
 			<version>${json.version}</version>
 		</dependency>
 		<!-- API Handling Jars End -->
+
+		<!-- Excel Handling Jars Start -->
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poiooxml.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>${xmlbeans.version}</version>
+		</dependency>
+		<!-- Excel Handling Jars End -->
+		<!--DB Connection-->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+		</dependency>
+
+		<!-- SLF4J API -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-api.version}</version>
+		</dependency>
+		<!-- Logback Classic (SLF4J binding) -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback-classic.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
