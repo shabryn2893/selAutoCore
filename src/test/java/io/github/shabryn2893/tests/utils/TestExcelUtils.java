@@ -2,48 +2,31 @@ package io.github.shabryn2893.tests.utils;
 
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Sheet;
+import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
 import io.github.shabryn2893.utils.ExcelUtils;
+import io.github.shabryn2893.utils.LoggerUtils;
 
 public class TestExcelUtils {
-	
+	private static final Logger logger = LoggerUtils.getLogger(TestExcelUtils.class);
 	@Test
 	public void testExcelUtils() {
 		
-		// Define the path to the Excel file
-        String filePath = "./src/main/resources/data.xlsx"; // Replace with your actual file path
-        String sheetName = "Sheet1"; // Replace with your actual sheet name
+		// Create a new Excel file
+        String filePath = "./src/main/resources/data.xlsx";
+        ExcelUtils.createExcelFile(filePath, "Sheet1", "Hello, World!");
 
-        // Load the Excel sheet
-        Sheet sheet = ExcelUtils.loadExcel(filePath, sheetName);
-        if (sheet == null) {
-            System.out.println("Failed to load sheet: " + sheetName);
-            return;
-        }
+        // Read a cell value
+        String cellValue = ExcelUtils.readCellValue(filePath, "Sheet1", 0, 0);
+        logger.info("Cell Value: {}",cellValue);
 
-        // Retrieve all data from the sheet
-        Map<Integer, Map<Integer, String>> allData = ExcelUtils.getAllData(sheet);
-        System.out.println("Excel Data:");
-        allData.forEach((rowIndex, rowData) -> {
-            rowData.forEach((colIndex, value) -> {
-                System.out.println("Row: " + rowIndex + ", Column: " + colIndex + ", Value: " + value);
-            });
-        });
+        // Update a cell value
+        ExcelUtils.updateCellValue(filePath, "Sheet1", 0, 0, "Updated Value");
 
-        // Modify a specific cell
-        int targetRow = 1; // 0-based index, change to the row you want to modify
-        int targetColumn = 1; // 0-based index, change to the column you want to modify
-        String newValue = "Updated Value"; // The new value to set
-
-        ExcelUtils.setCellValue(sheet, targetRow, targetColumn, newValue);
-        System.out.println("Updated cell at row " + targetRow + ", column " + targetColumn);
-
-        // Save the changes back to the Excel file
-        ExcelUtils.save(sheet, filePath);
-        System.out.println("Changes saved to " + filePath);
-		
+        // Load sheet data
+        Map<Integer, Map<Integer, String>> data = ExcelUtils.loadSheetData(filePath, "Sheet1");
+        logger.info("Sheet Data: {}",data);
 	}
 
 }

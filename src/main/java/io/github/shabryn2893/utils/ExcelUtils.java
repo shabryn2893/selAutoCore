@@ -9,50 +9,59 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility class for reading from and writing to Excel files.
+ * Utility class for reading from and writing to Excel files without throwing exceptions.
  */
 public class ExcelUtils {
 
     private static final Logger logger = LoggerUtils.getLogger(ExcelUtils.class);
+    private static final String SHEET_NOT_FOUND_MESSAGE = "Sheet {} not found in file {}";
+    private static final String COULD_NOT_LOAD_WORKBOOK_MESSAGE = "Could not load workbook from {}";
 
     // Private constructor to prevent instantiation
     private ExcelUtils() {
-        throw new UnsupportedOperationException("ExcelDataReader class should not be instantiated");
+        // No exceptions are thrown; class should not be instantiated
     }
 
     /**
-     * Loads an Excel file and selects a sheet.
+     * Loads a workbook from the specified file path.
      *
-     * @param filePath  the path to the Excel file.
-     * @param sheetName the name of the sheet to load.
-     * @return the loaded sheet, or null if an error occurs.
+     * @param filePath the path to the Excel file.
+     * @return the loaded Workbook, or null if an error occurs.
      */
-    public static Sheet loadExcel(String filePath, String sheetName) {
-        Workbook workbook = null;
+    public static Workbook loadWorkbook(String filePath) {
         try (FileInputStream fis = new FileInputStream(new File(filePath))) {
-            workbook = createWorkbook(fis, filePath);
-            if (workbook == null) {
-                return null;
-            }
-            Sheet sheet = workbook.getSheet(sheetName);
-            if (sheet == null) {
-                logger.warn("Sheet {} does not exist.", sheetName);
-            }
-            return sheet;
-        } catch (IOException | IllegalArgumentException e) {
+            return createWorkbook(fis, filePath);
+        } catch (IOException e) {
             logger.error("Error loading Excel file: {}", e.getMessage());
             return null;
-        } finally {
-            closeWorkbook(workbook);
         }
     }
 
     /**
-     * Creates a workbook based on the file extension.
+     * Retrieves a sheet from the workbook by name.
+     *
+     * @param workbook  the Workbook to retrieve the sheet from.
+     * @param sheetName the name of the sheet.
+     * @return the Sheet, or null if the sheet does not exist or an error occurs.
+     */
+    public static Sheet getSheet(Workbook workbook, String sheetName) {
+        if (workbook == null) {
+            return null;
+        }
+        Sheet sheet = workbook.getSheet(sheetName);
+        if (sheet == null) {
+            logger.warn("Sheet {} does not exist.", sheetName);
+        }
+        return sheet;
+    }
+
+    /**
+     * Creates a workbook from a file input stream based on the file extension.
      *
      * @param fis      the FileInputStream of the Excel file.
      * @param filePath the path to the Excel file.
@@ -65,32 +74,16 @@ public class ExcelUtils {
             } else if (filePath.endsWith(".xls")) {
                 return new HSSFWorkbook(fis);
             } else {
-                logger.error("The specified file is not an Excel file.");
-                return null;
+                logger.error("The specified file is not a valid Excel file.");
             }
         } catch (IOException e) {
             logger.error("Error creating workbook: {}", e.getMessage());
-            return null;
         }
+        return null;
     }
 
     /**
-     * Closes the workbook, suppressing any exceptions.
-     *
-     * @param workbook the workbook to close.
-     */
-    private static void closeWorkbook(Workbook workbook) {
-        if (workbook != null) {
-            try {
-                workbook.close();
-            } catch (IOException e) {
-                logger.error("Error closing workbook: {}", e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Retrieves a value from the specified cell.
+     * Retrieves the value from a specified cell.
      *
      * @param sheet    the sheet to read from.
      * @param rowIndex the index of the row (0-based).
@@ -98,16 +91,74 @@ public class ExcelUtils {
      * @return the value in the specified cell, or null if an error occurs.
      */
     public static String getCellValue(Sheet sheet, int rowIndex, int colIndex) {
+        if (sheet == null) {
+            return null;
+        }
         try {
             Row row = sheet.getRow(rowIndex);
             if (row == null) {
                 return null;
             }
             Cell cell = row.getCell(colIndex);
-            return cell != null ? cell.toString() : null;
+            if (cell == null) {
+                return null;
+            }
+            return getCellValueAsString(cell);
         } catch (Exception e) {
             logger.error("Error getting cell value: {}", e.getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Converts the cell value to a string based on its type.
+     *
+     * @param cell the cell to get the value from.
+     * @return the string representation of the cell value.
+     */
+    private static String getCellValueAsString(Cell cell) {
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString();
+                } else {
+                    return String.valueOf(cell.getNumericCellValue());
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return "";
+        }
+    }
+
+    /**
+     * Sets a value in the specified cell.
+     *
+     * @param sheet    the sheet to write to.
+     * @param rowIndex the index of the row (0-based).
+     * @param colIndex the index of the column (0-based).
+     * @param value    the value to write.
+     */
+    public static void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value) {
+        if (sheet == null) {
+            return;
+        }
+        try {
+            Row row = sheet.getRow(rowIndex);
+            if (row == null) {
+                row = sheet.createRow(rowIndex);
+            }
+            Cell cell = row.getCell(colIndex);
+            if (cell == null) {
+                cell = row.createCell(colIndex);
+            }
+            cell.setCellValue(value);
+        } catch (Exception e) {
+            logger.error("Error setting cell value: {}", e.getMessage());
         }
     }
 
@@ -119,6 +170,9 @@ public class ExcelUtils {
      */
     public static Map<Integer, Map<Integer, String>> getAllData(Sheet sheet) {
         Map<Integer, Map<Integer, String>> data = new HashMap<>();
+        if (sheet == null) {
+            return data;
+        }
         try {
             for (int i = 0; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
@@ -137,41 +191,119 @@ public class ExcelUtils {
     }
 
     /**
-     * Writes a value to the specified cell.
+     * Saves the workbook to the specified file path.
      *
-     * @param sheet    the sheet to write to.
-     * @param rowIndex the index of the row (0-based).
-     * @param colIndex the index of the column (0-based).
-     * @param value    the value to write.
+     * @param workbook the workbook to save.
+     * @param filePath the path to save the modified Excel file.
      */
-    public static void setCellValue(Sheet sheet, int rowIndex, int colIndex, String value) {
-        try {
-            Row row = sheet.getRow(rowIndex);
-            if (row == null) {
-                row = sheet.createRow(rowIndex);
-            }
-            Cell cell = row.getCell(colIndex);
-            if (cell == null) {
-                cell = row.createCell(colIndex);
-            }
-            cell.setCellValue(value);
-        } catch (Exception e) {
-            logger.error("Error setting cell value: {}", e.getMessage());
+    public static void saveWorkbook(Workbook workbook, String filePath) {
+        if (workbook == null) {
+            logger.error("Workbook is null. Cannot save.");
+            return;
+        }
+        try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
+            workbook.write(fos);
+        } catch (IOException e) {
+            logger.error("Error saving Excel file: {}", e.getMessage());
+        } finally {
+            closeWorkbook(workbook);
         }
     }
 
     /**
-     * Saves the changes to the Excel file.
+     * Closes the workbook, suppressing any exceptions.
      *
-     * @param sheet    the sheet to save.
-     * @param filePath the path to save the modified Excel file.
+     * @param workbook the workbook to close.
      */
-    public static void save(Sheet sheet, String filePath) {
-        try (FileOutputStream fos = new FileOutputStream(new File(filePath))) {
-            Workbook workbook = sheet.getWorkbook();
-            workbook.write(fos);
-        } catch (IOException e) {
-            logger.error("Error saving Excel file: {}", e.getMessage());
+    private static void closeWorkbook(Workbook workbook) {
+        if (workbook != null) {
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                logger.error("Error closing workbook: {}", e.getMessage());
+            }
         }
+    }
+    
+    /**
+     * Loads data from the specified Excel sheet.
+     *
+     * @param filePath  the path to the Excel file.
+     * @param sheetName the name of the sheet to load.
+     * @return a Map of row index to another Map of column index to cell value.
+     */
+    public static Map<Integer, Map<Integer, String>> loadSheetData(String filePath, String sheetName) {
+        Workbook workbook = loadWorkbook(filePath);
+        if (workbook == null) {
+            logger.error(COULD_NOT_LOAD_WORKBOOK_MESSAGE, filePath);
+            return Collections.emptyMap();
+        }
+        Sheet sheet = getSheet(workbook, sheetName);
+        if (sheet == null) {
+            logger.error(SHEET_NOT_FOUND_MESSAGE, sheetName, filePath);
+            return Collections.emptyMap();
+        }
+        return getAllData(sheet);
+    }
+    
+    /**
+     * Updates a cell value in the specified Excel sheet and saves the changes.
+     *
+     * @param filePath  the path to the Excel file.
+     * @param sheetName the name of the sheet to update.
+     * @param rowIndex  the index of the row (0-based).
+     * @param colIndex  the index of the column (0-based).
+     * @param newValue  the new value to set in the cell.
+     */
+    public static void updateCellValue(String filePath, String sheetName, int rowIndex, int colIndex, String newValue) {
+        Workbook workbook = loadWorkbook(filePath);
+        if (workbook == null) {
+            logger.error(COULD_NOT_LOAD_WORKBOOK_MESSAGE, filePath);
+            return;
+        }
+        Sheet sheet = getSheet(workbook, sheetName);
+        if (sheet == null) {
+            logger.error(SHEET_NOT_FOUND_MESSAGE, sheetName, filePath);
+            return;
+        }
+        setCellValue(sheet, rowIndex, colIndex, newValue);
+        saveWorkbook(workbook, filePath);
+    }
+    
+    /**
+     * Reads a specific cell value from the specified Excel sheet.
+     *
+     * @param filePath  the path to the Excel file.
+     * @param sheetName the name of the sheet to read from.
+     * @param rowIndex  the index of the row (0-based).
+     * @param colIndex  the index of the column (0-based).
+     * @return the value in the specified cell, or null if an error occurs.
+     */
+    public static String readCellValue(String filePath, String sheetName, int rowIndex, int colIndex) {
+        Workbook workbook = loadWorkbook(filePath);
+        if (workbook == null) {
+            logger.error(COULD_NOT_LOAD_WORKBOOK_MESSAGE, filePath);
+            return null;
+        }
+        Sheet sheet = getSheet(workbook, sheetName);
+        if (sheet == null) {
+            logger.error(SHEET_NOT_FOUND_MESSAGE, sheetName, filePath);
+            return null;
+        }
+        return getCellValue(sheet, rowIndex, colIndex);
+    }
+    
+    /**
+     * Creates a new Excel file with specified sheet name and initializes the first cell.
+     *
+     * @param filePath  the path to save the new Excel file.
+     * @param sheetName the name of the sheet to create.
+     * @param value     the initial value to set in the first cell.
+     */
+    public static void createExcelFile(String filePath, String sheetName, String value) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(sheetName);
+        setCellValue(sheet, 0, 0, value);
+        saveWorkbook(workbook, filePath);
     }
 }
