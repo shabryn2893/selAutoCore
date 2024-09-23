@@ -7,9 +7,14 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
 
 /**
  * Utility class for managing date operations.
@@ -25,8 +30,8 @@ import java.util.logging.Logger;
  */
 public class DateManager {
 
-    private static final Logger logger = Logger.getLogger(DateManager.class.getName());
-
+	 private static final Logger logger = LoggerUtils.getLogger(DateManager.class);
+    
     // Private constructor to prevent instantiation
     private DateManager() {
     	throw new UnsupportedOperationException("DateManager class should not be instantiated");
@@ -97,7 +102,7 @@ public class DateManager {
             Date date = new SimpleDateFormat(format).parse(dayDate);
             return new SimpleDateFormat("EEEE").format(date);
         } catch (ParseException e) {
-            logger.log(Level.SEVERE, "Error parsing date: {0} {1}",new Object[]{dayDate, e});
+            logger.error("Error parsing date: {} {}",dayDate, e);
             return ""; // Return empty string if error occurs
         }
     }

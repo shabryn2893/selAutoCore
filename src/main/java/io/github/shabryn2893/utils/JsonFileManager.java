@@ -3,9 +3,8 @@ package io.github.shabryn2893.utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 
 /**
  * Utility class for managing JSON files. Provides methods to read,
@@ -13,7 +12,7 @@ import org.json.JSONObject;
  */
 public class JsonFileManager {
 
-    private static final Logger logger = Logger.getLogger(JsonFileManager.class.getName());
+	private static final Logger logger = LoggerUtils.getLogger(JsonFileManager.class);
 
     // Private constructor to prevent instantiation
     private JsonFileManager() {}
@@ -28,7 +27,7 @@ public class JsonFileManager {
         try {
             return new String(Files.readAllBytes(Paths.get(filePath)));
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error reading JSON file:{0} {1}" ,new Object[]{filePath, e});
+            logger.error("Error reading JSON file:{} {}" ,filePath, e.getMessage());
             return ""; // Return an empty string if an error occurs
         }
     }
@@ -47,7 +46,7 @@ public class JsonFileManager {
                 JSONObject jsonData = new JSONObject(data);
                 return jsonData.optString(keyName, ""); // Return an empty string if the key is not found
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "Error parsing JSON data from file: {0}{1}" ,new Object[]{filePath, e});
+                logger.error("Error parsing JSON data from file: {}{}" ,filePath, e.getMessage());
             }
         }
         return ""; // Return an empty string if an error occurs
@@ -68,9 +67,9 @@ public class JsonFileManager {
                 jsonData.put(keyName, value);
                 String updatedData = jsonData.toString(4); // Pretty print with 4-space indentation
                 Files.write(Paths.get(filePath), updatedData.getBytes());
-                logger.log(Level.INFO, "Updated {0} in JSON file: {1}", new Object[]{keyName, filePath});
+                logger.info("Updated {} in JSON file: {}", keyName, filePath);
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Error writing to JSON file:{0} {1}" ,new Object[]{filePath, e});
+                logger.error("Error writing to JSON file:{} {}" ,filePath, e.getMessage());
             }
         }
     }

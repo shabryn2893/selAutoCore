@@ -4,8 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 /**
  * Utility class for performing read and write operations on properties files.
@@ -32,7 +31,7 @@ import java.util.logging.Logger;
 public class PropertyFileManager {
 
     // Logger for this class
-    private static final Logger logger = Logger.getLogger(PropertyFileManager.class.getName());
+	private static final Logger logger = LoggerUtils.getLogger(PropertyFileManager.class);
 
     /**
      * Private constructor to prevent instantiation of this utility class.
@@ -53,10 +52,10 @@ public class PropertyFileManager {
         Properties properties = new Properties();
         try (FileInputStream inputStream = new FileInputStream(filePath)) {
             properties.load(inputStream);
-            logger.log(Level.INFO, "Properties loaded successfully from file: {0}", filePath);
+            logger.info("Properties loaded successfully from file: {}", filePath);
         } catch (IOException e) {
             // Log the error
-            logger.log(Level.SEVERE, "Error loading properties from file: {0}", filePath);
+            logger.error("Error loading properties from file: {}", filePath);
         }
         return properties;
     }
@@ -73,9 +72,9 @@ public class PropertyFileManager {
         Properties properties = loadProperties(filePath);
         String value = properties.getProperty(key, "");
         if (value.isEmpty()) {
-            logger.log(Level.WARNING, "Property {0} not found in file: {1}", new Object[]{key, filePath});
+        	 logger.error("Property {} not found in file: {}", key, filePath);
         } else {
-            logger.log(Level.INFO, "Property {0} retrieved from file: {1}", new Object[]{key, filePath});
+            logger.info("Property {} retrieved from file: {}", key, filePath);
         }
         return value;
     }
@@ -92,7 +91,7 @@ public class PropertyFileManager {
         Properties properties = loadProperties(filePath);
         properties.setProperty(key, value);
         saveProperties(filePath, properties);
-        logger.log(Level.INFO, "Property {0} set to {1} in file: {2}", new Object[]{key, value, filePath});
+        logger.info("Property {} set to {} in file: {}", key, value, filePath);
     }
 
     /**
@@ -104,10 +103,10 @@ public class PropertyFileManager {
     public static void saveProperties(String filePath, Properties properties) {
         try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
             properties.store(outputStream, null); // You can add a comment as the second parameter
-            logger.log(Level.INFO, "Properties saved successfully to file: {0}", filePath);
+            logger.info("Properties saved successfully to file: {}", filePath);
         } catch (IOException e) {
             // Log the error
-            logger.log(Level.SEVERE, "Error saving properties to file: {0}", filePath);
+            logger.error("Error saving properties to file: {}", filePath);
         }
     }
 
@@ -121,9 +120,9 @@ public class PropertyFileManager {
         Properties properties = loadProperties(filePath);
         if (properties.remove(key) != null) {
             saveProperties(filePath, properties);
-            logger.log(Level.INFO, "Property {0} removed from file: {1}", new Object[]{key, filePath});
+            logger.info("Property {} removed from file: {}",key, filePath);
         } else {
-            logger.log(Level.WARNING, "Property {0} not found in file: {1}", new Object[]{key, filePath});
+        	logger.error("Property {} not found in file: {}", key, filePath);
         }
     }
 

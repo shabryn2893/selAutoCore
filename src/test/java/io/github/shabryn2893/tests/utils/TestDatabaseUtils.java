@@ -3,12 +3,14 @@ package io.github.shabryn2893.tests.utils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
 import org.testng.annotations.Test;
 
 import io.github.shabryn2893.utils.DatabaseUtils;
+import io.github.shabryn2893.utils.LoggerUtils;
 
 public class TestDatabaseUtils {
-
+	private static final Logger logger = LoggerUtils.getLogger(TestDatabaseUtils.class);
 	@Test
 	public void testDB() {
 		
@@ -26,8 +28,8 @@ public class TestDatabaseUtils {
         ResultSet resultSet = DatabaseUtils.select(selectQuery, "john@example.com");
         try {
             while (resultSet.next()) {
-                System.out.println("Name: " + resultSet.getString("name"));
-                System.out.println("Email: " + resultSet.getString("email"));
+               logger.info("Name: {}",resultSet.getString("name"));
+               logger.info("Email: {}", resultSet.getString("email"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

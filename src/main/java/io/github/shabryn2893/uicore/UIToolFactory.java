@@ -1,14 +1,15 @@
 package io.github.shabryn2893.uicore;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+
+import io.github.shabryn2893.utils.LoggerUtils;
 
 /**
  * This manages tools instance creation.
  */
 public class UIToolFactory {
 
-	private static final Logger logger = Logger.getLogger(UIToolFactory.class.getName());
+	private static final Logger logger = LoggerUtils.getLogger(UIToolFactory.class);
 	static IActionUI actionUI = null;
 
 	private UIToolFactory() {
@@ -22,10 +23,10 @@ public class UIToolFactory {
 	 */
 	public static IActionUI getUIToolInstance(String toolName) {
 		if (toolName.equalsIgnoreCase("SELENIUM")) {
-			logger.log(Level.INFO, "Create Instance for {0}", toolName);
+			logger.info("Create Instance for {}", toolName);
 			actionUI = new UIActionsSelenium();
 		} else {
-			logger.log(Level.INFO, "Unsupported UI Driver Name: {0}", toolName);
+			 logger.error("Unsupported UI Driver Name: {}", toolName);
 		}
 		return actionUI;
 	}

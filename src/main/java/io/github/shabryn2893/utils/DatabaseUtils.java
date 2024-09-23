@@ -5,8 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 /**
  * Utility class for handling database operations such as connection management,
@@ -14,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class DatabaseUtils {
 
-	private static final Logger LOGGER = Logger.getLogger(DatabaseUtils.class.getName());
+	private static final Logger logger = LoggerUtils.getLogger(DatabaseUtils.class);
 	private static String dbUrl;
 	private static String userName;
 	private static String password;
@@ -75,7 +74,7 @@ public class DatabaseUtils {
 		try {
 			return DriverManager.getConnection(getDbUrl(), getUserName(), getPassword());
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "Failed to connect to the database.", e);
+			logger.error("Failed to connect to the database {}",e.getMessage());
 			return null;
 		}
 	}
@@ -90,7 +89,7 @@ public class DatabaseUtils {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				LOGGER.log(Level.WARNING, "Failed to close connection.", e);
+				logger.error("Failed to close connection.{}",e.getMessage());
 			}
 		}
 	}
@@ -124,7 +123,7 @@ public class DatabaseUtils {
 			setParameters(preparedStatement, params);
 			return preparedStatement.executeQuery();
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "Failed to execute select query.", e);
+			logger.error("Failed to execute select query.{}", e.getMessage());
 			closeConnection(connection);
 			return null;
 		}
@@ -169,7 +168,7 @@ public class DatabaseUtils {
 			setParameters(preparedStatement, params);
 			return preparedStatement.executeUpdate() > 0;
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "Failed to execute update query.", e);
+			logger.error("Failed to execute update query.{}", e.getMessage());
 			return false;
 		} finally {
 			closeConnection(connection);

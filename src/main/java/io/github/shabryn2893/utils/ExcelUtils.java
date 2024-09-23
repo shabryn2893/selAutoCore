@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility class for reading from and writing to Excel files without throwing exceptions.
+ * Utility class for reading from and writing to Excel files.
  */
 public class ExcelUtils {
 
@@ -306,4 +306,67 @@ public class ExcelUtils {
         setCellValue(sheet, 0, 0, value);
         saveWorkbook(workbook, filePath);
     }
+    
+    /**
+     * Retrieves a row of data from the specified Excel sheet based on the given test ID.
+     *
+     * @param filePath  the path to the Excel file.
+     * @param sheetName the name of the sheet to search in.
+     * @param testId    the test ID to search for in the first column.
+     * @return a Map containing the header and corresponding cell values for the found test ID,
+     *         or an empty Map if the test ID is not found or if an error occurs.
+     */
+    public static Map<String, String> getRowDataByTestId(String filePath, String sheetName, String testId) {
+        Map<String, String> tcData = new HashMap<>();
+        Workbook workbook = loadWorkbook(filePath);
+        
+        if (workbook == null) {
+            logger.error(COULD_NOT_LOAD_WORKBOOK_MESSAGE, filePath);
+            return Collections.emptyMap();
+        }
+
+        Sheet sheet = getSheet(workbook, sheetName);
+        if (sheet == null) {
+            logger.error(SHEET_NOT_FOUND_MESSAGE, sheetName, filePath);
+            return Collections.emptyMap();
+        }
+
+        // Iterate through each row to find the test ID
+        for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+            Row currentRow = sheet.getRow(i);
+            if (currentRow != null && testId.equalsIgnoreCase(currentRow.getCell(0).getStringCellValue())) {
+                // Get the header cells from the first row
+                Row headerRow = sheet.getRow(0);
+                for (int j = headerRow.getFirstCellNum(); j < headerRow.getLastCellNum(); j++) {
+                    Cell headerCell = headerRow.getCell(j);
+                    Cell dataCell = currentRow.getCell(j);
+                    
+                    // Ensure both cells are not null before adding to the map
+                    if (headerCell != null && dataCell != null) {
+                        tcData.put(headerCell.getStringCellValue(), dataCell.getStringCellValue());
+                    }
+                }
+                break; // Exit loop after finding the test ID
+            }
+        }
+        return tcData;
+    }
+    
+    /**
+     * Retrieves a specific column value from the row corresponding to the given test ID
+     * in the specified Excel sheet based on the column name.
+     *
+     * @param filePath  the path to the Excel file.
+     * @param sheetName the name of the sheet to search in.
+     * @param testId    the test ID to search for in the first column.
+     * @param columnName the name of the column from which to retrieve the value.
+     * @return the value from the specified column for the found test ID,
+     *         or null if the test ID or column name is not found.
+     */
+    public static String getColumnValueByColumnNameTestId(String filePath, String sheetName, String testId, String columnName) {
+        Map<String, String> rowData = getRowDataByTestId(filePath, sheetName, testId);
+        return rowData != null ? rowData.get(columnName) : null;
+    }
+
+
 }
