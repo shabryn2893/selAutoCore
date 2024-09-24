@@ -5,9 +5,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -23,9 +20,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import org.slf4j.Logger;
 import io.github.shabryn2893.uidriverfactory.DriverManager;
 import io.github.shabryn2893.uidriverfactory.DriverManagerFactory;
+import io.github.shabryn2893.utils.LoggerUtils;
 
 /**
  * Implements the methods of IActionUI interface.
@@ -33,8 +31,7 @@ import io.github.shabryn2893.uidriverfactory.DriverManagerFactory;
  * @author shabbir rayeen UIActionsSelenium
  */
 public class UIActionsSelenium implements IActionUI {
-
-	private static final Logger logger = Logger.getLogger(UIActionsSelenium.class.getName());
+	private static final Logger logger = LoggerUtils.getLogger(UIActionsSelenium.class);
 	private DriverManager driverManager;
 	private WebDriver driver;
 	private WebElement element = null;
@@ -98,7 +95,7 @@ public class UIActionsSelenium implements IActionUI {
 	 */
 	@Override
 	public void openURL(String url) {
-		logger.log(Level.INFO, "Opening url:{0}", url);
+		logger.info("Opening url:{}", url);
 		driver.get(url);
 	}
 
@@ -121,7 +118,7 @@ public class UIActionsSelenium implements IActionUI {
 			waitUntill(locatorType, locatorValue, "CLICKABLE", maxWaitTime);
 			element.click();
 		} else {
-			logger.log(Level.INFO, "WebElement {0} is not clickable.", locatorValue);
+			logger.error("WebElement {} is not clickable.", locatorValue);
 			assert false;
 		}
 	}
@@ -145,7 +142,7 @@ public class UIActionsSelenium implements IActionUI {
 			element = findElement(locatorType, locatorValue);
 			element.sendKeys(textToEnter);
 		} else {
-			logger.log(Level.INFO, "WebElement {0} is not enabled.", locatorValue);
+			logger.error("WebElement {} is not enabled.", locatorValue);
 			assert false;
 		}
 
@@ -186,7 +183,7 @@ public class UIActionsSelenium implements IActionUI {
 					wait.until(ExpectedConditions.elementToBeSelected(element));
 					break;
 				default:
-					logger.log(Level.INFO, "Unsupported wait condition:{0}", conditionName);
+					logger.error("Unsupported wait condition:{}", conditionName);
 					return false;
 				}
 				return true;
@@ -258,7 +255,7 @@ public class UIActionsSelenium implements IActionUI {
 	public void waitForPageLoad(int time) {
 		Function<WebDriver, Boolean> function = wDriver -> {
 			String readyState = (String) jExecutor.executeScript("return document.readyState");
-			logger.log(Level.INFO, "Current Window State:{0}", readyState);
+			logger.info("Current Window State:{}", readyState);
 			return "complete".equals(readyState);
 		};
 		setWebDriverWait(function, time);
@@ -313,7 +310,7 @@ public class UIActionsSelenium implements IActionUI {
 			break;
 		}
 		default:
-			logger.log(Level.INFO, "Unsupported state Type:{0} ", stateType);
+			logger.error("Unsupported state Type:{} ", stateType);
 			assert false;
 		}
 		return status;
@@ -340,7 +337,7 @@ public class UIActionsSelenium implements IActionUI {
 			element = findElement(locatorType, locatorValue);
 			attributeValue = element.getAttribute(attributeName);
 		} else {
-			logger.log(Level.INFO, "Unable to find attribute value as Web Element is not present in the DOM");
+			logger.info("Unable to find attribute value as Web Element is not present in the DOM");
 			assert false;
 		}
 		return attributeValue;
@@ -423,7 +420,7 @@ public class UIActionsSelenium implements IActionUI {
 			element = findElement(locatorType, locatorValue);
 			jExecutor.executeScript("arguments[0].click();", element);
 		} else {
-			logger.log(Level.INFO, "Unable to perform JSClick: Web Element is not present");
+			logger.info("Unable to perform JSClick: Web Element is not present");
 			assert false;
 		}
 
@@ -448,7 +445,7 @@ public class UIActionsSelenium implements IActionUI {
 			element = findElement(locatorType, locatorValue);
 			textValue = element.getText().trim();
 		} else {
-			logger.log(Level.INFO, "Unable to get Text: Web Element is not present");
+			logger.info("Unable to get Text: Web Element is not present");
 			assert false;
 		}
 		return textValue;
@@ -479,7 +476,7 @@ public class UIActionsSelenium implements IActionUI {
 			}
 
 		} else {
-			logger.log(Level.INFO, "Unable to perform scroll: Web Element is not present");
+			logger.info("Unable to perform scroll: Web Element is not present");
 			assert false;
 		}
 
@@ -563,11 +560,11 @@ public class UIActionsSelenium implements IActionUI {
 			}
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
-			logger.log(Level.INFO, "NoSuchElementException");
+			logger.info("NoSuchElementException");
 			assert false;
 		} catch (WebDriverException e) {
 			e.printStackTrace();
-			logger.log(Level.INFO, "WebDriverException");
+			logger.info("WebDriverException");
 			assert false;
 		}
 
@@ -618,11 +615,11 @@ public class UIActionsSelenium implements IActionUI {
 			}
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
-			logger.log(Level.INFO, "NoSuchElementException");
+			logger.info("NoSuchElementException");
 			assert false;
 		} catch (WebDriverException e) {
 			e.printStackTrace();
-			logger.log(Level.INFO, "WebDriverException");
+			logger.info("WebDriverException");
 			assert false;
 		}
 		return elements;
@@ -649,7 +646,7 @@ public class UIActionsSelenium implements IActionUI {
 		startTime = System.currentTimeMillis();
 		try {
 			while (!(this.isElementPresent(locatorType, locatorValue))) {
-				logger.log(Level.INFO, "Waiting for Element {0} to be appear...", locatorValue);
+				logger.info("Waiting for Element {} to be appear...", locatorValue);
 				this.waitForElement(1);
 				endTime = System.currentTimeMillis();
 				if (endTime - startTime > maxWaitTime * 1000) {
@@ -659,7 +656,7 @@ public class UIActionsSelenium implements IActionUI {
 
 		} catch (Exception e) {
 			status = false;
-			logger.log(Level.INFO, "Element: {0} is not appear within the specified timeout", locatorValue);
+			logger.error("Element: {} is not appear within the specified timeout", locatorValue);
 			e.printStackTrace();
 			assert false;
 		}
@@ -686,7 +683,7 @@ public class UIActionsSelenium implements IActionUI {
 		startTime = System.currentTimeMillis();
 		try {
 			while ((this.isElementPresent(locatorType, locatorValue))) {
-				logger.log(Level.INFO, "Waiting for Element {0} to be disappear...", locatorValue);
+				logger.info("Waiting for Element {} to be disappear...", locatorValue);
 				this.waitForElement(1);
 				endTime = System.currentTimeMillis();
 				if (endTime - startTime > maxWaitTime * 1000) {
@@ -696,7 +693,7 @@ public class UIActionsSelenium implements IActionUI {
 
 		} catch (Exception e) {
 			status = false;
-			logger.log(Level.INFO, "Element: {0} is not disappear within the specified timeout", locatorValue);
+			logger.error("Element: {} is not disappear within the specified timeout", locatorValue);
 			e.printStackTrace();
 			assert false;
 		}
@@ -726,7 +723,7 @@ public class UIActionsSelenium implements IActionUI {
 			driver.navigate().refresh();
 			break;
 		default:
-			logger.log(Level.INFO, "Unspported Direction: {0}", direction);
+			logger.error("Unspported Direction: {}", direction);
 			assert false;
 
 		}
@@ -781,7 +778,7 @@ public class UIActionsSelenium implements IActionUI {
 			element = findElement(locatorType, locatorValue);
 			action.moveToElement(element).perform();
 		} else {
-			logger.log(Level.INFO, "Unable to do hover: Web Element is not present");
+			logger.info("Unable to do hover: Web Element is not present");
 			assert false;
 		}
 
@@ -804,7 +801,7 @@ public class UIActionsSelenium implements IActionUI {
 			element = findElement(locatorType, locatorValue);
 			action.contextClick(element).perform();
 		} else {
-			logger.log(Level.INFO, "Unable to do right click: Web Element is not present");
+			logger.info("Unable to do right click: Web Element is not present");
 			assert false;
 		}
 
@@ -827,7 +824,7 @@ public class UIActionsSelenium implements IActionUI {
 			element = findElement(locatorType, locatorValue);
 			action.doubleClick(element).perform();
 		} else {
-			logger.log(Level.INFO, "Unable to do double : Web Element is not present");
+			logger.info("Unable to do double : Web Element is not present");
 			assert false;
 		}
 

@@ -1,5 +1,8 @@
 package io.github.shabryn2893.apicore;
 
+import org.slf4j.Logger;
+import io.github.shabryn2893.utils.LoggerUtils;
+
 /**
  * This class is for initiating API tool instance
  * 
@@ -7,6 +10,7 @@ package io.github.shabryn2893.apicore;
  */
 public class APIToolFactory {
 
+	private static final Logger logger = LoggerUtils.getLogger(APIToolFactory.class);
 	static IActionAPI actionAPI = null;
 
 	private APIToolFactory() {}
@@ -20,12 +24,12 @@ public class APIToolFactory {
 	public static IActionAPI getAPIToolInstance(String toolName, String baseURI) {
 		switch (toolName.toUpperCase()) {
 		case "RESTASSURED": {
-			System.out.println("Create Instance for " + toolName);
+			logger.info("Create Instance for {}",toolName);
 			actionAPI = new APIActionsRestAssured(baseURI);
 			break;
 		}
 		default: {
-			System.out.println("Unsupported API Driver Name: " + toolName);
+			logger.error("Unsupported API Driver Name: {}",toolName);
 		}
 		}
 		return actionAPI;

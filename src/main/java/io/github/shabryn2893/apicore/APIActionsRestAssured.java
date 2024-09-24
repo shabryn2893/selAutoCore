@@ -2,12 +2,11 @@ package io.github.shabryn2893.apicore;
 
 import java.io.File;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 
+import io.github.shabryn2893.utils.LoggerUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -20,7 +19,7 @@ import io.restassured.specification.RequestSpecification;
  */
 public class APIActionsRestAssured implements IActionAPI {
 
-	private static final Logger logger = Logger.getLogger(APIActionsRestAssured.class.getName());
+	private static final Logger logger = LoggerUtils.getLogger(APIActionsRestAssured.class);
 	RequestSpecification request;
 	Response response;
 
@@ -130,7 +129,7 @@ public class APIActionsRestAssured implements IActionAPI {
 			request.contentType(ContentType.TEXT);
 			break;
 		default:
-			logger.log(Level.INFO,"Unsupported Content type:{0}",contentType);
+			 logger.error("Unsupported Content type:{}",contentType);
 		}
 
 	}
@@ -216,7 +215,7 @@ public class APIActionsRestAssured implements IActionAPI {
 	 */
 	@Override
 	public void printResponse() {
-		logger.log(Level.INFO,"API Response: {0}",response.asPrettyString());
+		logger.info("API Response: {}",response);
 	}
 
 	/**

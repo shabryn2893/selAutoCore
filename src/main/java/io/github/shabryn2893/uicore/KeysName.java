@@ -1,9 +1,8 @@
 package io.github.shabryn2893.uicore;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.openqa.selenium.Keys;
+import org.slf4j.Logger;
+import io.github.shabryn2893.utils.LoggerUtils;
 
 /**
  * This manages keys names and their action.
@@ -12,7 +11,7 @@ import org.openqa.selenium.Keys;
  */
 public class KeysName {
 	
-	private static final Logger logger = Logger.getLogger(KeysName.class.getName());
+	private static final Logger logger = LoggerUtils.getLogger(KeysName.class);
 
 	private KeysName() {
 	}
@@ -46,7 +45,7 @@ public class KeysName {
 			key = Keys.ESCAPE;
 			break;
 		default:
-			logger.log(Level.INFO,"Unsupported Key Name:{0}",keyName);
+			logger.error("Unsupported Key Name:{}",keyName);
 		}
 		return key;
 	}
