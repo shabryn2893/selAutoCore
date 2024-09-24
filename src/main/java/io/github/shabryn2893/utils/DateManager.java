@@ -20,13 +20,10 @@ import org.slf4j.Logger;
  * Utility class for managing date operations.
  * Provides methods for date calculations, formatting, and retrieving specific date information.
  *
- * <p>
  * Example usage:
- * <pre>
+ * 
  * String nextFriday = DateManager.getDateBasedOnDayNameForCurrentWeek("Friday", "yyyy-MM-dd");
  * System.out.println("Next Friday: " + nextFriday);
- * </pre>
- * </p>
  */
 public class DateManager {
 

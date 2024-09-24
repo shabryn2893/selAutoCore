@@ -9,6 +9,14 @@ import org.openqa.selenium.WebDriver;
  */
 public abstract class DriverManager {
 
+	/**
+	 * WebDriver instance used for interacting with the web browser during automated tests.
+	 * 
+	 * This driver controls browser operations such as navigating to web pages,
+	 * interacting with web elements, and executing browser commands.
+	 * 
+	 * It is typically initialized with a specific browser type (e.g., Chrome, Firefox).
+	 */
 	protected WebDriver driver;
 
 	/**

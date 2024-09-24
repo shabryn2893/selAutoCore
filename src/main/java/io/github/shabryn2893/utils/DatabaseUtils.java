@@ -24,46 +24,59 @@ public class DatabaseUtils {
 	}
 
 	/**
-	 * @return the dbUrl
+	 * Returns the database URL.
+	 *
+	 * @return the database URL as a String
 	 */
 	public static String getDbUrl() {
-		return dbUrl;
+	    return dbUrl;
 	}
 
 	/**
-	 * @param dBUrl the dbUrl to set
+	 * Sets the database URL.
+	 *
+	 * @param dBUrl the database URL to be set
 	 */
 	public static void setDbUrl(String dBUrl) {
-		dbUrl = dBUrl;
+	    dbUrl = dBUrl;
 	}
 
 	/**
-	 * @return the uSERNAME
+	 * Returns the database username.
+	 *
+	 * @return the database username as a String
 	 */
 	public static String getUserName() {
-		return userName;
+	    return userName;
 	}
 
 	/**
-	 * @param dbUserName the userName to set
+	 * Sets the database username.
+	 *
+	 * @param dbUserName the database username to be set
 	 */
 	public static void setUserName(String dbUserName) {
-		userName = dbUserName;
+	    userName = dbUserName;
 	}
 
 	/**
-	 * @return the pASSWORD
+	 * Returns the database password.
+	 *
+	 * @return the database password as a String
 	 */
 	public static String getPassword() {
-		return password;
+	    return password;
 	}
 
 	/**
-	 * @param password the dbPassword to set
+	 * Sets the database password.
+	 *
+	 * @param dbPassword the database password to be set
 	 */
 	public static void setPassword(String dbPassword) {
-		password = dbPassword;
+	    password = dbPassword;
 	}
+
 
 	/**
 	 * Establishes a connection to the database.
