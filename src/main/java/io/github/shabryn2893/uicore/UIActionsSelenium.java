@@ -4,25 +4,26 @@ import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
+
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
-import io.github.shabryn2893.uidriverfactory.DriverManager;
-import io.github.shabryn2893.uidriverfactory.DriverManagerFactory;
+
+import io.github.shabryn2893.locatorfactory.ElementLocator;
+import io.github.shabryn2893.locatorfactory.LocatorFactory;
 import io.github.shabryn2893.utils.LoggerUtils;
 
 /**
@@ -32,34 +33,63 @@ import io.github.shabryn2893.utils.LoggerUtils;
  */
 public class UIActionsSelenium implements IActionUI {
 	private static final Logger logger = LoggerUtils.getLogger(UIActionsSelenium.class);
-	private DriverManager driverManager;
 	private WebDriver driver;
 	private WebElement element = null;
-	private JavascriptExecutor jExecutor = null;
 	private Actions action = null;
 
 	/**
-     * Default constructor for the UIActionsSelenium class.
-     * Initializes a new instance with default values.
-     */
-	protected UIActionsSelenium() {
-		// Default constructor does not initialize fields
-	}
-	/**
-	 * Initiate browser based on the parameter passed
-	 *
-	 * @param browserType    - This can accept values like CHROME,FIREFOX or EDGE.
-	 * @param isHeadlessMode - This can accept values like true or false.
-	 * 
-	 *                       initializeDriver("CHROME",false);
+	 * Default constructor for the UIActionsSelenium class. Initializes a new
+	 * instance with default values.
 	 */
-	@Override
-	public void initializeDriver(String browserType, boolean isHeadlessMode) {
-		driverManager = DriverManagerFactory.getManager(browserType);
-		driver = driverManager.getDriver(isHeadlessMode);
-		jExecutor = (JavascriptExecutor) driver;
+	public UIActionsSelenium(WebDriver driver) {
+		this.driver = driver;
 		action = new Actions(driver);
+	}
+	
+	/**
+	 * Locate web element in the DOM .
+	 *
+	 * @param locatorType  - This can have values like
+	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the
+	 *                     locator type selected.d
+	 * 
+	 * @return It returns web element if finds else throw NoSuchElementException.
+	 * 
+	 *         findElement("XPATH","//button[@name='login']");
+	 */
+
+	private WebElement findElement(String locatorType, String locatorValue) {
+		ElementLocator<WebElement> locator = LocatorFactory.getLocator(driver);
+		return locator.locateElement(locatorType, locatorValue);
+	}
+
+	/**
+	 * Locate web elements in the DOM .
+	 *
+	 * @param locatorType  - This can have values like
+	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
+	 * @param locatorValue - Here you need to pass locator value based on the
+	 *                     locator type selected.d
+	 * 
+	 * @return It returns List of match web elements if find, else return empty
+	 *         list.
+	 * 
+	 *         findElements("XPATH","//button[@name='login']");
+	 */
+	
+	private List<WebElement> findElements(String locatorType, String locatorValue) {
+		ElementLocator<WebElement>  locator = LocatorFactory.getLocator(driver);
+		return locator.locateElements(locatorType, locatorValue);
+	}
+
+	@Override
+	public void maximizeScreen() {
 		driver.manage().window().maximize();
+	}
+
+	@Override
+	public void deleteAllCookies() {
 		driver.manage().deleteAllCookies();
 	}
 
@@ -82,7 +112,7 @@ public class UIActionsSelenium implements IActionUI {
 	 */
 	@Override
 	public void closeBrowser() {
-		driverManager.quitDriver();
+		driver.quit();
 	}
 
 	/**
@@ -115,7 +145,6 @@ public class UIActionsSelenium implements IActionUI {
 	public void click(String locatorType, String locatorValue, int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue, maxWaitTime)) {
 			element = findElement(locatorType, locatorValue);
-			waitUntill(locatorType, locatorValue, "CLICKABLE", maxWaitTime);
 			element.click();
 		} else {
 			logger.error("WebElement {} is not clickable.", locatorValue);
@@ -144,53 +173,6 @@ public class UIActionsSelenium implements IActionUI {
 		} else {
 			logger.error("WebElement {} is not enabled.", locatorValue);
 			assert false;
-		}
-
-	}
-
-	/**
-	 * Wait any web element until specific condition is matched.
-	 *
-	 * @param locatorType   - This can have values like
-	 *                      ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue  - Here you need to pass locator value based on the
-	 *                      locator type selected.
-	 * @param conditionName - This can values like CLICKABLE,INVISIBLE,VISIBLE or
-	 *                      SELECTED
-	 * @param maxWaitTime   -maximum waiting to match specific condition.
-	 * 
-	 * 
-	 *                      waitUntill("XPATH","//button[@name='login']","VISIBLE",100);
-	 */
-	@Override
-	public void waitUntill(String locatorType, final String locatorValue, final String conditionName, int maxWaitTime) {
-		try {
-			element = findElement(locatorType, locatorValue);
-			Function<WebDriver, Boolean> function = wDriver -> {
-				WebDriverWait wait = new WebDriverWait(wDriver, Duration.ofSeconds(maxWaitTime));
-
-				switch (conditionName.toUpperCase()) {
-				case "CLICKABLE":
-					wait.until(ExpectedConditions.elementToBeClickable(element));
-					break;
-				case "INVISIBLE":
-					wait.until(ExpectedConditions.invisibilityOf(element));
-					break;
-				case "VISIBLE":
-					wait.until(ExpectedConditions.visibilityOf(element));
-					break;
-				case "SELECTED":
-					wait.until(ExpectedConditions.elementToBeSelected(element));
-					break;
-				default:
-					logger.error("Unsupported wait condition:{}", conditionName);
-					return false;
-				}
-				return true;
-			};
-			setFluentWait(function, maxWaitTime);
-		} catch (Exception ex1) {
-			ex1.printStackTrace();
 		}
 
 	}
@@ -254,7 +236,7 @@ public class UIActionsSelenium implements IActionUI {
 	@Override
 	public void waitForPageLoad(int time) {
 		Function<WebDriver, Boolean> function = wDriver -> {
-			String readyState = (String) jExecutor.executeScript("return document.readyState");
+			String readyState = (String)this.executeJSAction("return document.readyState");
 			logger.info("Current Window State:{}", readyState);
 			return "complete".equals(readyState);
 		};
@@ -332,7 +314,6 @@ public class UIActionsSelenium implements IActionUI {
 	@Override
 	public String getAttributeValue(String locatorType, String locatorValue, String attributeName, int maxWaitTime) {
 		String attributeValue = null;
-		waitUntill(locatorType, locatorValue, "VISIBLE", maxWaitTime);
 		if (this.waitUntillElementAppear(locatorType, locatorValue, maxWaitTime)) {
 			element = findElement(locatorType, locatorValue);
 			attributeValue = element.getAttribute(attributeName);
@@ -418,7 +399,7 @@ public class UIActionsSelenium implements IActionUI {
 	public void jsClick(String locatorType, String locatorValue, int maxWaitTime) {
 		if (this.waitUntillElementAppear(locatorType, locatorValue, maxWaitTime)) {
 			element = findElement(locatorType, locatorValue);
-			jExecutor.executeScript("arguments[0].click();", element);
+			this.executeJSAction("arguments[0].click();",element);
 		} else {
 			logger.info("Unable to perform JSClick: Web Element is not present");
 			assert false;
@@ -472,7 +453,7 @@ public class UIActionsSelenium implements IActionUI {
 			if (scrollType.equalsIgnoreCase("NORMAL")) {
 				action.scrollToElement(element).perform();
 			} else {
-				jExecutor.executeScript("arguments[0].scrollIntoView(true);", element);
+				this.executeJSAction("arguments[0].scrollIntoView(true);", element);
 			}
 
 		} else {
@@ -507,124 +488,7 @@ public class UIActionsSelenium implements IActionUI {
 
 	}
 
-	/**
-	 * Locate web element in the DOM .
-	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * 
-	 * @return It returns web element if finds else throw NoSuchElementException.
-	 * 
-	 *         findElement("XPATH","//button[@name='login']");
-	 */
-	@Override
-	public WebElement findElement(String locatorType, String locatorValue) {
-		try {
-			switch (locatorType.toUpperCase()) {
-			case "ID":
-				element = driver.findElement(By.id(locatorValue));
-				break;
-			case "XPATH":
-				element = driver.findElement(By.xpath(locatorValue));
-				break;
-			case "LINKTEXT":
-				element = driver.findElement(By.linkText(locatorValue));
-				break;
-			case "CSS":
-				element = driver.findElement(By.cssSelector(locatorValue));
-				break;
-			case "NAME":
-				element = driver.findElement(By.name(locatorValue));
-				break;
-			case "TAG":
-				element = driver.findElement(By.tagName(locatorValue));
-				break;
-			case "PARTIALLINKTEXT":
-				element = driver.findElement(By.partialLinkText(locatorValue));
-				break;
-			case "SHADOWDOM":
-				/*
-				 * locatorValue=shadow-host-selector~shadow-element-selector shadow-host-selecto
-				 * = shadowElementLocators[0] shadow-element-selector=shadowElementLocators[1]
-				 */
-				String[] shadowElementLocators = locatorValue.split("~");
-				WebElement shadowHost = driver.findElement(By.cssSelector(shadowElementLocators[0]));
-				WebElement shadowRoot = (WebElement) jExecutor.executeScript("return arguments[0].shadowRoot",
-						shadowHost);
-				element = shadowRoot.findElement(By.cssSelector(shadowElementLocators[0]));
-				break;
-			default:
-				element = driver.findElement(By.className(locatorValue));
-			}
-		} catch (NoSuchElementException e) {
-			e.printStackTrace();
-			logger.info("NoSuchElementException");
-			assert false;
-		} catch (WebDriverException e) {
-			e.printStackTrace();
-			logger.info("WebDriverException");
-			assert false;
-		}
 
-		return element;
-	}
-
-	/**
-	 * Locate web elements in the DOM .
-	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * 
-	 * @return It returns List of match web elements if find, else return empty
-	 *         list.
-	 * 
-	 *         findElements("XPATH","//button[@name='login']");
-	 */
-	@Override
-	public List<WebElement> findElements(String locatorType, String locatorValue) {
-		List<WebElement> elements = null;
-		try {
-			switch (locatorType.toUpperCase()) {
-			case "ID":
-				elements = driver.findElements(By.id(locatorValue));
-				break;
-			case "XPATH":
-				elements = driver.findElements(By.xpath(locatorValue));
-				break;
-			case "LINKTEXT":
-				elements = driver.findElements(By.linkText(locatorValue));
-				break;
-			case "CSS":
-				elements = driver.findElements(By.cssSelector(locatorValue));
-				break;
-			case "NAME":
-				elements = driver.findElements(By.name(locatorValue));
-				break;
-			case "TAG":
-				elements = driver.findElements(By.tagName(locatorValue));
-				break;
-			case "PARTIALLINKTEXT":
-				elements = driver.findElements(By.partialLinkText(locatorValue));
-				break;
-			default:
-				elements = driver.findElements(By.className(locatorValue));
-			}
-		} catch (NoSuchElementException e) {
-			e.printStackTrace();
-			logger.info("NoSuchElementException");
-			assert false;
-		} catch (WebDriverException e) {
-			e.printStackTrace();
-			logger.info("WebDriverException");
-			assert false;
-		}
-		return elements;
-
-	}
 
 	/**
 	 * Wait till specific web element appears in the DOM.
@@ -728,6 +592,18 @@ public class UIActionsSelenium implements IActionUI {
 
 		}
 
+	}
+	
+	public void switchToNewWindowTabWhenClicked(String locatorType, String locatorValue,int maxWaitTime) {
+		click(locatorType, locatorValue, maxWaitTime);
+		String originalWindow = driver.getWindowHandle();
+		Set<String> windowHandles = driver.getWindowHandles();
+		for (String windowHandle : windowHandles) {
+            if (!windowHandle.equals(originalWindow)) {
+                driver.switchTo().window(windowHandle);
+                break;
+            }
+        }
 	}
 
 	/**
@@ -864,7 +740,7 @@ public class UIActionsSelenium implements IActionUI {
 	 *                     switchFrame("INDEX","0");
 	 */
 	@Override
-	public void switchFrame(String locatorType, String locatorValue) {
+	public void switchToFrame(String locatorType, String locatorValue) {
 
 		switch (locatorType.toUpperCase()) {
 		case "INDEX":
@@ -909,8 +785,16 @@ public class UIActionsSelenium implements IActionUI {
 	 *                     typeUsingKeyboard("XPATH","//input[@id='username']","Welcome");
 	 */
 	@Override
-	public void typeUsingKeyboard(String locatorType, String locatorValue, String textToType) {
-		action.click(this.findElement(locatorType, locatorValue)).sendKeys(textToType).perform();
+	public void typeUsingKeyboard(String locatorType, String locatorValue,int maxWaitTime,String textToType) {
+		
+		if (this.waitUntillElementAppear(locatorType, locatorValue, maxWaitTime)) {
+			element = findElement(locatorType, locatorValue);
+			action.click(element).sendKeys(textToType).perform();
+		} else {
+			logger.info("Unable to type using Keyboard on Web Element: {}",locatorValue);
+			assert false;
+		}
+		
 	}
 
 	/**
@@ -925,10 +809,36 @@ public class UIActionsSelenium implements IActionUI {
 	public void pressKeyCombination(String combinationKeysName) {
 		if (combinationKeysName.contains(",")) {
 			String[] keys = combinationKeysName.split(",");
-			action.keyDown(KeysName.getKey(keys[0])).sendKeys(keys[1]).keyUp(KeysName.getKey(keys[0])).perform();
+			action.keyDown(KeysName.getKey(this.driver,keys[0])).sendKeys(keys[1]).keyUp(KeysName.getKey(this.driver,keys[0])).perform();
 		} else {
-			action.sendKeys(KeysName.getKey(combinationKeysName)).perform();
+			action.sendKeys(KeysName.getKey(this.driver,combinationKeysName)).perform();
 		}
+	}
+
+	@Override
+	public void selectFromDropdown(String locatorType, String locatorValue, String type, String value) {
+		WebElement dropdownElement =this.findElement(locatorType, locatorValue);
+        Select dropdown = new Select(dropdownElement);
+        
+        switch (type.toUpperCase()) {
+            case "VALUE":
+                dropdown.selectByValue(value);
+                break;
+            case "INDEX":
+                dropdown.selectByIndex(Integer.parseInt(value));
+                break;
+            case "VISIBLE_TEXT":
+                dropdown.selectByVisibleText(value);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid selection type: " + type);
+        }
+	}
+
+	@Override
+	public Object executeJSAction(String script, Object... args) {
+		JavascriptExecutor jsExecutor = (JavascriptExecutor)driver;
+        return jsExecutor.executeScript(script, args);
 	}
 
 }
