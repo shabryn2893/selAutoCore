@@ -6,11 +6,11 @@
 
 	<groupId>io.github.shabryn2893</groupId>
 	<artifactId>selAutoCore</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>selAutoCore is libray which has capacity to automated Web
-		Application.It is wrapper of Selenium and Rest Assured</description>
+		Application as well APIs.It supports Selenium,Playwright and Rest Assured</description>
 	<url>https://github.com/shabryn2893/selAutoCore</url>
 
 	<licenses>
