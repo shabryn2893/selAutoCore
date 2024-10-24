@@ -12,7 +12,7 @@ import io.github.shabryn2893.apicore.IActionAPI;
  * Sample API Test
  */
 public class SampleAPITest {
-	
+
 	static IActionAPI apiInstannce = null;
 
 	/**
@@ -20,9 +20,10 @@ public class SampleAPITest {
 	 */
 	@BeforeTest
 	public void setUp() {
-		apiInstannce = APIToolFactory.getAPIToolInstance("RESTASSURED","https://practice-react.sdetunicorns.com/api/test");
+		apiInstannce = APIToolFactory.getAPIToolInstance("RESTASSURED",
+				"https://practice-react.sdetunicorns.com/api/test");
 	}
-	
+
 	/**
 	 * Simple test case to get all brands.
 	 */
@@ -32,13 +33,13 @@ public class SampleAPITest {
 		Assert.assertEquals(apiInstannce.getStatusCode(), 200);
 		apiInstannce.printResponse();
 	}
-	
+
 	/**
 	 * Executes tearDown script.
 	 */
 	@AfterTest
 	public void tearDown() {
-		//Write here you tearDown script.
+		// Write here you tearDown script.
 	}
 
 }

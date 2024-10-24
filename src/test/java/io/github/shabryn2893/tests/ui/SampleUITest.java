@@ -15,7 +15,7 @@ import io.github.shabryn2893.uidriverfactory.DriverManager;
 public class SampleUITest {
 	
 	static IActionUI globalDriver = null;
-	String toolName="PLAYWRIGHT";
+	String toolName="SELENIUM";
 	int maxWaitTime=100;
 	
 	/**
@@ -39,12 +39,11 @@ public class SampleUITest {
 	@Test
 	public void test() {
 		globalDriver.openURL("https://parabank.parasoft.com/parabank/index.htm");
-		globalDriver.type("XPATH", "//input[@name='username']", "abcs@gmail.com", maxWaitTime);
-		globalDriver.type("XPATH", "//input[@name='password']", "Welcome@122", maxWaitTime);
-		globalDriver.click("XPATH", "//input[@value='Log In']", maxWaitTime);
+		globalDriver.waitForPageLoad(maxWaitTime);
+		globalDriver.click("XPATH", "//a[text()='Register']", maxWaitTime);
 		String actualPagetitle=globalDriver.getPageTitle();
 		System.out.println("Actual Page Title: "+actualPagetitle);
-		Assert.assertEquals(actualPagetitle, "ParaBank | Error");
+		Assert.assertEquals(actualPagetitle, "ParaBank | Register for Free Online Account Access");
 	}
 	
 	/**

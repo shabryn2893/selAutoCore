@@ -151,8 +151,8 @@ public class UIActionsPlaywright implements IActionUI {
 	 */
 	@Override
 	public void waitForPageLoad(int timeInSeconds) {
-		this.page.waitForFunction(
-				"() => window.performance.getEntriesByType('resource').every(entry => entry.initiatorType === 'img' || entry.initiatorType === 'script' || entry.initiatorType === 'link' || entry.initiatorType === 'fetch' || entry.initiatorType === 'xmlhttprequest') && document.readyState === 'complete'");
+		this.page.waitForLoadState();
+		this.page.onLoad(p -> logger.info("Page loaded!"));
 	}
 
 	/**

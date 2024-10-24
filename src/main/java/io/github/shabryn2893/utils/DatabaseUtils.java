@@ -29,7 +29,7 @@ public class DatabaseUtils {
 	 * @return the database URL as a String
 	 */
 	public static String getDbUrl() {
-	    return dbUrl;
+		return dbUrl;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class DatabaseUtils {
 	 * @param dBUrl the database URL to be set
 	 */
 	public static void setDbUrl(String dBUrl) {
-	    dbUrl = dBUrl;
+		dbUrl = dBUrl;
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class DatabaseUtils {
 	 * @return the database username as a String
 	 */
 	public static String getUserName() {
-	    return userName;
+		return userName;
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class DatabaseUtils {
 	 * @param dbUserName the database username to be set
 	 */
 	public static void setUserName(String dbUserName) {
-	    userName = dbUserName;
+		userName = dbUserName;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class DatabaseUtils {
 	 * @return the database password as a String
 	 */
 	public static String getPassword() {
-	    return password;
+		return password;
 	}
 
 	/**
@@ -74,9 +74,8 @@ public class DatabaseUtils {
 	 * @param dbPassword the database password to be set
 	 */
 	public static void setPassword(String dbPassword) {
-	    password = dbPassword;
+		password = dbPassword;
 	}
-
 
 	/**
 	 * Establishes a connection to the database.
@@ -87,7 +86,7 @@ public class DatabaseUtils {
 		try {
 			return DriverManager.getConnection(getDbUrl(), getUserName(), getPassword());
 		} catch (SQLException e) {
-			logger.error("Failed to connect to the database {}",e.getMessage());
+			logger.error("Failed to connect to the database {}", e.getMessage());
 			return null;
 		}
 	}
@@ -102,7 +101,7 @@ public class DatabaseUtils {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close connection.{}",e.getMessage());
+				logger.error("Failed to close connection.{}", e.getMessage());
 			}
 		}
 	}

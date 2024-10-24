@@ -29,7 +29,7 @@ import io.github.shabryn2893.utils.LoggerUtils;
  * {@code createBrowser()} method to instantiate browser drivers using Selenium.
  * </p>
  * 
- * <h3>Supported Browsers:</h3>
+ * >Supported Browsers:
  * <ul>
  * <li>Chrome</li>
  * <li>Firefox</li>
@@ -37,15 +37,13 @@ import io.github.shabryn2893.utils.LoggerUtils;
  * <li>Safari</li>
  * </ul>
  * 
- * <h3>Example Usage:</h3>
+ * Example Usage:
  * 
  * <pre>{@code
  * SeleniumDriverFactory factory = new SeleniumDriverFactory("chrome", true);
  * IActionUI browserActions = factory.createBrowser();
  * }</pre>
  * 
- * @author
- * @version 1.0
  */
 public class SeleniumDriverFactory extends DriverManager {
 
@@ -92,7 +90,7 @@ public class SeleniumDriverFactory extends DriverManager {
 	 * mode.
 	 * </p>
 	 * 
-	 * <h3>Supported Browser Types:</h3>
+	 * Supported Browser Types:
 	 * <ul>
 	 * <li>CHROME</li>
 	 * <li>FIREFOX</li>

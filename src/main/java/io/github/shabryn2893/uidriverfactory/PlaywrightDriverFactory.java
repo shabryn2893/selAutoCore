@@ -22,7 +22,7 @@ import io.github.shabryn2893.utils.LoggerUtils;
  * {@code createBrowser()} method to instantiate browser drivers.
  * </p>
  * 
- * <h3>Supported Browsers:</h3>
+ * Supported Browsers:
  * <ul>
  * <li>Chrome</li>
  * <li>Edge</li>
@@ -30,19 +30,16 @@ import io.github.shabryn2893.utils.LoggerUtils;
  * <li>Safari</li>
  * </ul>
  * 
- * <h3>Example Usage:</h3>
+ * Example Usage:
  * 
  * <pre>{@code
  * PlaywrightDriverFactory factory = new PlaywrightDriverFactory("chrome", true);
  * IActionUI browserActions = factory.createBrowser();
  * }</pre>
  * 
- * @author
- * @version 1.0
  */
 public class PlaywrightDriverFactory extends DriverManager {
 
-	
 	private static final Logger logger = LoggerUtils.getLogger(PlaywrightDriverFactory.class);
 	/**
 	 * The type of the browser to be launched (e.g., "CHROME", "EDGE", "FIREFOX",
@@ -54,10 +51,10 @@ public class PlaywrightDriverFactory extends DriverManager {
 	 * Specifies whether the browser should be run in headless mode.
 	 */
 	private boolean headless;
-	//Instance variable for Playwright
+	// Instance variable for Playwright
 	private Playwright playwright;
-	//Instance variable for Browser
-    private Browser browser; 
+	// Instance variable for Browser
+	private Browser browser;
 
 	/**
 	 * Constructs a {@code PlaywrightDriverFactory} with the specified browser type
@@ -80,7 +77,7 @@ public class PlaywrightDriverFactory extends DriverManager {
 	 * {@link UIActionsPlaywright} object for browser interactions.
 	 * </p>
 	 * 
-	 * <h3>Supported Browser Types:</h3>
+	 * Supported Browser Types:
 	 * <ul>
 	 * <li>CHROME</li>
 	 * <li>EDGE</li>
@@ -92,47 +89,46 @@ public class PlaywrightDriverFactory extends DriverManager {
 	 * @throws IllegalArgumentException if the browser type is not supported
 	 */
 	@Override
-    public IActionUI createBrowser() {
-        try {
-            // Initialize Playwright instance
-            playwright = Playwright.create();
+	public IActionUI createBrowser() {
+		try {
+			// Initialize Playwright instance
+			playwright = Playwright.create();
 
-            // Launch the appropriate browser based on the provided browser type
-            switch (browserType.toUpperCase()) {
-                case "CHROME":
-                    browser = playwright.chromium()
-                            .launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(headless));
-                    break;
-                case "EDGE":
-                    browser = playwright.chromium()
-                            .launch(new BrowserType.LaunchOptions().setChannel("msedge").setHeadless(headless));
-                    break;
-                case "FIREFOX":
-                    browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(headless));
-                    break;
-                case "SAFARI":
-                    browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(headless));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported Playwright browser type: " + browserType);
-            }
+			// Launch the appropriate browser based on the provided browser type
+			switch (browserType.toUpperCase()) {
+			case "CHROME":
+				browser = playwright.chromium()
+						.launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(headless));
+				break;
+			case "EDGE":
+				browser = playwright.chromium()
+						.launch(new BrowserType.LaunchOptions().setChannel("msedge").setHeadless(headless));
+				break;
+			case "FIREFOX":
+				browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(headless));
+				break;
+			case "SAFARI":
+				browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(headless));
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported Playwright browser type: " + browserType);
+			}
 
-        } catch (PlaywrightException e) {
-            e.printStackTrace();
-            logger.error("Failed to create browser instance:", e);
+		} catch (PlaywrightException e) {
+			e.printStackTrace();
+			logger.error("Failed to create browser instance:", e);
 
-        } finally {
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                if (browser != null) {
-                    browser.close();
-                }
-                if (playwright != null) {
-                    playwright.close();
-                }
-            }));
-        }
-        return new UIActionsPlaywright(browser);
-    }
-
+		} finally {
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				if (browser != null) {
+					browser.close();
+				}
+				if (playwright != null) {
+					playwright.close();
+				}
+			}));
+		}
+		return new UIActionsPlaywright(browser);
+	}
 
 }

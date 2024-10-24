@@ -12,7 +12,7 @@ import io.github.shabryn2893.uicore.IActionUI;
  * browsers.
  * </p>
  * 
- * <h3>Example Usage:</h3>
+ * Example Usage:
  * 
  * <pre>{@code
  * public class ChromeDriverManager extends DriverManager {
@@ -23,8 +23,6 @@ import io.github.shabryn2893.uicore.IActionUI;
  * }
  * }</pre>
  * 
- * @author
- * @version 1.0
  */
 public abstract class DriverManager {
 
