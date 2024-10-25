@@ -1,4 +1,4 @@
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.shabryn2893/selAutoCore.svg)](https://search.maven.org/artifact/io.github.shabryn2893/selAutoCore)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.shabryn2893/selAutoCore.svg)](https://central.sonatype.com/artifact/io.github.shabryn2893/selAutoCore)
 ## Please do add below dependency to use my library : selAutoCore
 
 ```xml
