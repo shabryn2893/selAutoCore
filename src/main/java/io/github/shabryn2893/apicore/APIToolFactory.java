@@ -13,7 +13,9 @@ public class APIToolFactory {
 	private static final Logger logger = LoggerUtils.getLogger(APIToolFactory.class);
 	static IActionAPI actionAPI = null;
 
-	private APIToolFactory() {}
+	private APIToolFactory() {
+	}
+
 	/**
 	 * Get the tool instance
 	 *
@@ -22,16 +24,13 @@ public class APIToolFactory {
 	 * @return It return IActionUI reference. getAPIToolInstance("RESTASSURED");
 	 */
 	public static IActionAPI getAPIToolInstance(String toolName, String baseURI) {
-		switch (toolName.toUpperCase()) {
-		case "RESTASSURED": {
-			logger.info("Create Instance for {}",toolName);
+		if (toolName.equalsIgnoreCase("RESTASSURED")) {
+			logger.info("Create Instance for {}", toolName);
 			actionAPI = new APIActionsRestAssured(baseURI);
-			break;
+		} else {
+			logger.error("Unsupported API Driver Name: {}", toolName);
 		}
-		default: {
-			logger.error("Unsupported API Driver Name: {}",toolName);
-		}
-		}
+
 		return actionAPI;
 	}
 

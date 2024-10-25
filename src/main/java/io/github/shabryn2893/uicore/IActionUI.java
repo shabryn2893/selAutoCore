@@ -1,424 +1,329 @@
 package io.github.shabryn2893.uicore;
 
-import java.util.List;
-
-import org.openqa.selenium.WebElement;
-
 /**
- * Reusable function across framework for UI Automation.
+ * Provides reusable UI automation functions for use across the framework. This
+ * interface defines methods for interacting with browser windows, elements, and
+ * performing common actions like clicks, navigation, waits, and more.
  * 
- * @author shabbir rayeen
+ * @author Shabbir Rayeen
  */
 public interface IActionUI {
 
 	/**
-	 * Initiate browser based on the parameter passed
-	 *
-	 * @param browserType    - This can accept values like CHROME,FIREFOX or EDGE.
-	 * @param isHeadlessMode - This can accept values like true or false.
-	 * 
-	 *                       initializeDriver("CHROME",false);
+	 * Maximizes the browser window to full screen.
 	 */
-	public void initializeDriver(String browserType, boolean isHeadlessMode);
+	public void maximizeScreen();
 
 	/**
-	 * Close the current opened tab or window.
-	 * 
-	 * closeCurrentTabWindow();
+	 * Deletes all browser cookies.
+	 */
+	public void deleteAllCookies();
+
+	/**
+	 * Closes the current browser tab or window.
 	 */
 	public void closeCurrentTabWindow();
 
 	/**
-	 * Close the browse window.
-	 *
-	 * 
-	 * 
-	 * closeBrowser();
+	 * Closes the browser window.
 	 */
 	public void closeBrowser();
 
 	/**
-	 * Open the url in the browser window.
+	 * Opens a URL in the browser window.
 	 * 
-	 * @param url - This take application url as parameter
-	 * 
-	 * 
-	 *            openURL("https://www.google.com");
+	 * @param url the URL to open in the browser.
 	 */
 	public void openURL(String url);
 
 	/**
-	 * Click on any web element.
+	 * Clicks on a web element using the specified locator.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.
-	 * @param maxWaitTime  -maximum waiting to perform click.
-	 * 
-	 * 
-	 *                     click("XPATH","//button[@name='login']",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param maxWaitTime  the maximum time to wait for the element to become
+	 *                     clickable.
 	 */
 	public void click(String locatorType, String locatorValue, int maxWaitTime);
 
 	/**
-	 * Enter text inside the web element: textbox or textarea .
+	 * Enters text into a web element, typically a text box or text area.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.
-	 * @param textToEnter  - Value that you want to type inside textbox or textarea
-	 * @param maxWaitTime  -maximum waiting to enter text.
-	 * 
-	 * 
-	 *                     type("XPATH","//input[@name='username']","abc",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param textToEnter  the text to enter into the element.
+	 * @param maxWaitTime  the maximum time to wait for the element to be ready for
+	 *                     input.
 	 */
 	public void type(String locatorType, String locatorValue, String textToEnter, int maxWaitTime);
 
 	/**
-	 * Wait any web element until specific condition is matched.
+	 * Waits for the page to fully load within the specified time.
 	 *
-	 * @param locatorType   - This can have values like
-	 *                      ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue  - Here you need to pass locator value based on the
-	 *                      locator type selected.
-	 * @param conditionName - This can values like CLICKABLE,INVISIBLE,VISIBLE or
-	 *                      SELECTED
-	 * @param maxWaitTime   -maximum waiting to match specific condition.
-	 * 
-	 * 
-	 *                      waitUntill("XPATH","//button[@name='login']","VISIBLE",100);
-	 */
-	public void waitUntill(String locatorType, final String locatorValue, final String conditionName, int maxWaitTime);
-
-	/**
-	 * Wait for the page load.
-	 *
-	 * @param timeInSeconds - waiting time for page load.
-	 * 
-	 * 
-	 *                      waitForPageLoad(100);
+	 * @param timeInSeconds the maximum wait time in seconds for the page to load.
 	 */
 	public void waitForPageLoad(int timeInSeconds);
 
 	/**
-	 * Wait for the page load.
+	 * Pauses execution for the specified number of seconds (hard wait).
 	 *
-	 * @param seconds - hard wait time for web element. waitForElement(10);
+	 * @param seconds the number of seconds to wait.
 	 */
 	public void waitForElement(int seconds);
 
 	/**
-	 * Checks whether web element is displayed or enabled or selected.
+	 * Checks if a web element is displayed, enabled, or selected.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.
-	 * @param stateType    - This can values like DISPLAYED,ENABLED,SELECTED
-	 * @return It returns boolean.
-	 * 
-	 *         isElementDisplayedOrEnabledOrSelected("XPATH","//button[@name='login']","DISPLAYED");
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param stateType    the state to check for (e.g., DISPLAYED, ENABLED,
+	 *                     SELECTED).
+	 * @return true if the element is in the specified state, false otherwise.
 	 */
 	public boolean isElementDisplayedOrEnabledOrSelected(String locatorType, String locatorValue, String stateType);
 
 	/**
-	 * Gets the attribute value based on the attribute name of the web element.
+	 * Gets the value of a specified attribute from a web element.
 	 *
-	 * @param locatorType   - This can have values like
-	 *                      ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue  - Here you need to pass locator value based on the
-	 *                      locator type selected.
-	 * @param attributeName - This can values like value,class,id
-	 * @param maxWaitTime   - maximum waiting time.
-	 * @return It returns String.
-	 * 
-	 *         getAttributeValue("XPATH","//button[@name='login']","value",100);
+	 * @param locatorType   the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue  the value of the locator.
+	 * @param attributeName the name of the attribute to retrieve.
+	 * @param maxWaitTime   the maximum time to wait for the element.
+	 * @return the value of the specified attribute.
 	 */
 	public String getAttributeValue(String locatorType, String locatorValue, String attributeName, int maxWaitTime);
 
 	/**
-	 * Gets the current URL.
-	 * 
-	 * @return It returns String.
-	 * 
-	 *         getURL();
+	 * Gets the current URL of the page.
+	 *
+	 * @return the current URL as a string.
 	 */
 	public String getURL();
 
 	/**
-	 * Takes the screenshot of the visible web page.
-	 * 
-	 * @param screenshotPath -location where to store screenshot
-	 * @return It returns screenshot in BASE64 format.
-	 * 
-	 *         takeScreenshot("./screenshot/abc.jpeg");
+	 * Takes a screenshot of the visible portion of the webpage.
+	 *
+	 * @param screenshotPath the path where the screenshot will be saved.
+	 * @return the screenshot in Base64 format.
 	 */
 	public String takeScreenshot(String screenshotPath);
 
 	/**
-	 * Takes the screenshot of the specific web element.
-	 * 
-	 * @param locatorType    - This can have values like
-	 *                       ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue   - Here you need to pass locator value based on the
-	 *                       locator type selected.
-	 * @param screenshotPath -location where to store screenshot
-	 * @return It returns screenshot in BASE64 format.
-	 * 
-	 *         takeScreenshot("XPATH","//button[@name='login']","./screenshot/abc.jpeg");
+	 * Takes a screenshot of a specific web element.
+	 *
+	 * @param locatorType    the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue   the value of the locator.
+	 * @param screenshotPath the path where the screenshot will be saved.
+	 * @return the screenshot in Base64 format.
 	 */
 	public String takeScreenshot(String locatorType, String locatorValue, String screenshotPath);
 
 	/**
-	 * Perform click using javaScript executor.
+	 * Performs a click action using JavaScript.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * @param maxWaitTime  - maximum waiting time.
-	 * 
-	 * 
-	 *                     jsClick("XPATH","//button[@name='login']","value",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param maxWaitTime  the maximum time to wait for the element to become
+	 *                     clickable.
 	 */
 	public void jsClick(String locatorType, String locatorValue, int maxWaitTime);
 
 	/**
-	 * Gets the text of any web element except text-box .
+	 * Gets the visible text of a web element.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * @param maxWaitTime  - maximum waiting time.
-	 * @return It returns web element text.
-	 * 
-	 *         getText("XPATH","//button[@name='login']",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param maxWaitTime  the maximum time to wait for the element to be visible.
+	 * @return the text of the element.
 	 */
 	public String getText(String locatorType, String locatorValue, int maxWaitTime);
 
 	/**
-	 * Perform scroll operation till specific web element .
+	 * Scrolls to a specific web element.
 	 *
-	 * @param locatorType  This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue Here you need to pass locator value based on the locator
-	 *                     type selected.d
-	 * @param scrollType   NORMAL-Perform using Action class JS - Perform using
-	 *                     JavaScript Executor
-	 * @param maxWaitTime  maximum waiting time.
-	 * 
-	 * 
-	 *                     scrollToElement("XPATH","//button[@name='login']","JS",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param scrollType   the type of scrolling to perform (e.g., NORMAL, JS).
+	 * @param maxWaitTime  the maximum time to wait for the element to be
+	 *                     scrollable.
 	 */
 	public void scrollToElement(String locatorType, String locatorValue, String scrollType, int maxWaitTime);
 
 	/**
-	 * Checks for web element presence in the DOM .
+	 * Checks if a web element is present in the DOM.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * 
-	 * @return It returns element state in form of true or false.
-	 * 
-	 *         isElementPresent("XPATH","//button[@name='login']");
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @return true if the element is present, false otherwise.
 	 */
 	public boolean isElementPresent(String locatorType, String locatorValue);
 
 	/**
-	 * Locate web element in the DOM .
+	 * Waits until a specific web element appears in the DOM.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * 
-	 * @return It returns web element if finds else throw NoSuchElementException.
-	 * 
-	 *         findElement("XPATH","//button[@name='login']");
-	 */
-	public WebElement findElement(String locatorType, String locatorValue);
-
-	/**
-	 * Locate web elements in the DOM .
-	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * 
-	 * @return It returns List of match web elements if find, else return empty
-	 *         list.
-	 * 
-	 *         findElements("XPATH","//button[@name='login']");
-	 */
-	public List<WebElement> findElements(String locatorType, String locatorValue);
-
-	/**
-	 * Wait till specific web element appears in the DOM.
-	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.
-	 * @param maxWaitTime  - maximum waiting time.
-	 * @return It returns boolean value true or false.
-	 * 
-	 *         waitUntillElementAppear("XPATH","//button[@name='login']",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param maxWaitTime  the maximum time to wait for the element.
+	 * @return true if the element appears within the specified time, false
+	 *         otherwise.
 	 */
 	public boolean waitUntillElementAppear(String locatorType, String locatorValue, int maxWaitTime);
 
 	/**
-	 * Wait till specific web element disappears from the DOM.
+	 * Waits until a specific web element disappears from the DOM.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.
-	 * @param maxWaitTime  - maximum waiting time.
-	 * @return It returns boolean value true or false.
-	 * 
-	 *         waitUntillElementDisappear("XPATH","//button[@name='login']",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param maxWaitTime  the maximum time to wait for the element to disappear.
+	 * @return true if the element disappears within the specified time, false
+	 *         otherwise.
 	 */
 	public boolean waitUntillElementDisappear(String locatorType, String locatorValue, int maxWaitTime);
 
 	/**
-	 * Perform navigation operation like page forward,back or refresh.
-	 * 
-	 * @param direction - This can have values like FORWARD,BACK, or REFRESH
-	 * 
-	 * 
-	 *                  navigateTo("FORWARD");
+	 * Performs a navigation action (e.g., forward, back, or refresh).
+	 *
+	 * @param direction the direction of navigation (FORWARD, BACK, or REFRESH).
 	 */
 	public void navigateTo(String direction);
 
 	/**
-	 * Switch on the opened tab or window based on index value.
-	 * 
-	 * @param windowTabIndex - accept integer value
-	 * 
-	 * 
-	 *                       switchToOpenedTabWindow(0);
+	 * Switches to a new window or tab when an element is clicked.
+	 *
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator for the element to be clicked.
+	 * @param maxWaitTime  the maximum time to wait for the element to be clickable
+	 *                     before switching to the new window/tab.
+	 */
+	public void switchToNewWindowTabWhenClicked(String locatorType, String locatorValue, int maxWaitTime);
+
+	/**
+	 * Switches to an open tab or window based on the index.
+	 *
+	 * @param windowTabIndex the index of the window or tab to switch to.
 	 */
 	public void switchToOpenedTabWindow(int windowTabIndex);
 
 	/**
-	 * Opens new tab or window and switch to it.
-	 * 
-	 * @param type - WINDOW=Opens new window TAB=Opens new tab
-	 * 
-	 * 
-	 *             createNewWindowTabSwitch("WINDOW");
+	 * Opens a new tab or window and switches to it.
+	 *
+	 * @param type the type of window to open (WINDOW or TAB).
 	 */
 	public void createNewWindowTabSwitch(String type);
 
 	/**
-	 * Perform mouse hover action on specific web element .
+	 * Performs a mouse hover action on a web element.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * @param maxWaitTime  - maximum waiting time.
-	 * 
-	 *                     hoverElement("XPATH","//button[@name='login']",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param maxWaitTime  the maximum time to wait for the hover action.
 	 */
 	public void hoverElement(String locatorType, String locatorValue, int maxWaitTime);
 
 	/**
-	 * Perform mouse right click action on specific web element .
+	 * Performs a right-click action on a web element.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * @param maxWaitTime  - maximum waiting time.
-	 * 
-	 *                     rightClickElement("XPATH","//button[@name='login']",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param maxWaitTime  the maximum time to wait for the right-click action.
 	 */
 	public void rightClickElement(String locatorType, String locatorValue, int maxWaitTime);
 
 	/**
-	 * Perform mouse double click action on specific web element .
+	 * Performs a double-click action on a web element.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * @param maxWaitTime  - maximum waiting time.
-	 * 
-	 *                     doubleClickElement("XPATH","//button[@name='login']",100);
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator.
+	 * @param maxWaitTime  the maximum time to wait for the double-click action.
 	 */
 	public void doubleClickElement(String locatorType, String locatorValue, int maxWaitTime);
 
 	/**
-	 * Gets title of web page
+	 * Retrieves the title of the current page.
 	 *
-	 * @return It return title of page in string format.
-	 * 
-	 *         getPageTitle();
+	 * @return the title of the current page as a string.
 	 */
 	public String getPageTitle();
 
 	/**
-	 * Switches back to Parent Tab or Window or Iframe.
-	 *
-	 * 
-	 * switchToParenTabWindowIframe();
+	 * Switches the focus to the parent tab or window and then switches to the
+	 * iframe within that tab or window.
 	 */
 	public void switchToParenTabWindowIframe();
 
 	/**
-	 * Perform switch to iFrame.
+	 * Drags an element from a source location and drops it onto a target location.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     INDEX,NAMEORID,ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.d
-	 * 
-	 *                     switchFrame("INDEX","0");
-	 */
-	public void switchFrame(String locatorType, String locatorValue);
-
-	/**
-	 * Perform drag and drop mouse action.
-	 *
-	 * @param locatorType        - This can have values like
-	 *                           INDEX,NAMEORID,ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param sourceLocatorValue - Here you need to pass locator value based on the
-	 *                           locator type selected.This source web element.
-	 * @param targetLocatorValue - Here you need to pass locator value based on the
-	 *                           locator type selected.This target web element.
-	 * 
-	 *                           dragAndDrop("XPATH","//div[@id='source']","//div[@id='target']");
+	 * @param locatorType        the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param sourceLocatorValue the value of the locator for the source element.
+	 * @param targetLocatorValue the value of the locator for the target element.
 	 */
 	public void dragAndDrop(String locatorType, String sourceLocatorValue, String targetLocatorValue);
 
 	/**
-	 * Perform keyboard typing action.
+	 * Enters text into a web element using keyboard actions.
 	 *
-	 * @param locatorType  - This can have values like
-	 *                     INDEX,NAMEORID,ID,CLASS,TAG,XPATH,LINKTEXT,CSS,NAME,PARTIALLINKTEXT,SHADOWDOM
-	 * @param locatorValue - Here you need to pass locator value based on the
-	 *                     locator type selected.
-	 * @param textToType   - text to type
-	 * 
-	 *                     typeUsingKeyboard("XPATH","//input[@id='username']","Welcome");
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator for the target element.
+	 * @param maxWaitTime  the maximum time to wait for the element to be ready.
+	 * @param textToType   the text to type using the keyboard.
 	 */
-	public void typeUsingKeyboard(String locatorType, String locatorValue, String textToType);
+	public void typeUsingKeyboard(String locatorType, String locatorValue, int maxWaitTime, String textToType);
 
 	/**
-	 * Perform keyboard action.
+	 * Presses a combination of keys, such as Ctrl+C or Ctrl+V.
 	 *
-	 * @param combinationKeysName - CTRL+C,CTRL+V,ENTER,TAB,A,B,C,D. etc...
-	 * 
-	 *                            pressKeyCombination("CTRL,C");
-	 *                            pressKeyCombination("ENTER");
+	 * @param combinationKeysName the name of the key combination (e.g., "CTRL+C",
+	 *                            "CTRL+V").
 	 */
 	public void pressKeyCombination(String combinationKeysName);
+
+	/**
+	 * Selects a value from a dropdown list by the given method (value, index, or
+	 * visible text).
+	 *
+	 * @param locatorType  the type of locator (e.g., ID, XPATH, CSS, etc.).
+	 * @param locatorValue the value of the locator for the dropdown element.
+	 * @param type         the method for selecting the value (e.g., "VALUE",
+	 *                     "INDEX", "VISIBLE_TEXT").
+	 * @param value        the value to select from the dropdown.
+	 */
+	public void selectFromDropdown(String locatorType, String locatorValue, String type, String value);
+
+	/**
+	 * Switches to a specific iframe identified by the given locator or id or index.
+	 *
+	 * This method allows you to switch the context of the driver to the specified
+	 * iframe so that subsequent actions can be performed within that frame.
+	 *
+	 * @param locatorType  the type of locator used to identify the iframe (e.g.,
+	 *                     "CSS", "XPath").
+	 * @param locatorValue the value of the locator to find the iframe (e.g., the
+	 *                     actual CSS selector or XPath expression).
+	 * @throws RuntimeException if the iframe is not found, cannot be switched to,
+	 *                          or if the specified locator is invalid.
+	 */
+	public void switchToFrame(String locatorType, String locatorValue);
+
+	/**
+	 * Executes a JavaScript action in the web context.
+	 *
+	 * This method allows for the execution of arbitrary JavaScript code within the
+	 * current page context. The script can perform various tasks such as
+	 * manipulating the DOM, retrieving values, or executing functions defined on
+	 * the page.
+	 *
+	 * @param script The JavaScript code to execute. This should be a valid
+	 *               JavaScript expression or statement.
+	 * @param args   Optional arguments to pass to the script. These can be used
+	 *               within the script to provide dynamic values or to manipulate
+	 *               the execution context.
+	 * @return The result of the script execution. The type of the result may vary
+	 *         depending on the script executed. If the script returns a value, it
+	 *         will be returned; otherwise, null will be returned.
+	 * @throws RuntimeException If there is an error executing the script, such as a
+	 *                          syntax error or an issue with the execution context.
+	 */
+	public Object executeJSAction(String script, Object... args);
 
 }

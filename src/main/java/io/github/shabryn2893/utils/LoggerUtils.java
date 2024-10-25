@@ -8,18 +8,18 @@ import org.slf4j.LoggerFactory;
  */
 public class LoggerUtils {
 
-    // Private constructor to prevent instantiation
-    private LoggerUtils() {
-        throw new UnsupportedOperationException("LoggerUtils class should not be instantiated");
-    }
+	// Private constructor to prevent instantiation
+	private LoggerUtils() {
+		throw new UnsupportedOperationException("LoggerUtils class should not be instantiated");
+	}
 
-    /**
-     * Gets a logger for the specified class.
-     *
-     * @param clazz the class for which to get the logger.
-     * @return a logger for the specified class.
-     */
-    public static Logger getLogger(Class<?> clazz) {
-        return LoggerFactory.getLogger(clazz);
-    }
+	/**
+	 * Gets a logger for the specified class.
+	 *
+	 * @param clazz the class for which to get the logger.
+	 * @return a logger for the specified class.
+	 */
+	public static Logger getLogger(Class<?> clazz) {
+		return LoggerFactory.getLogger(clazz);
+	}
 }

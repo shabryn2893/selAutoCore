@@ -1,62 +1,40 @@
 package io.github.shabryn2893.uidriverfactory;
 
-import org.openqa.selenium.WebDriver;
+import io.github.shabryn2893.uicore.IActionUI;
 
 /**
- * This class manages different browser.
+ * The {@code DriverManager} class is an abstract class responsible for managing
+ * browser driver creation. It defines the contract for creating a browser by
+ * implementing the {@link IActionUI} interface.
  * 
- * @author shabbir rayeen
+ * <p>
+ * Subclasses are expected to provide specific implementations for different
+ * browsers.
+ * </p>
+ * 
+ * Example Usage:
+ * 
+ * <pre>{@code
+ * public class ChromeDriverManager extends DriverManager {
+ * 	@Override
+ * 	public IActionUI createBrowser() {
+ * 		// Implementation for Chrome browser
+ * 	}
+ * }
+ * }</pre>
+ * 
  */
 public abstract class DriverManager {
 
 	/**
-	 * WebDriver instance used for interacting with the web browser during automated tests.
+	 * Creates and returns an instance of a browser driver.
 	 * 
-	 * This driver controls browser operations such as navigating to web pages,
-	 * interacting with web elements, and executing browser commands.
+	 * <p>
+	 * This method must be implemented by subclasses to provide the specific logic
+	 * for creating different browser drivers.
+	 * </p>
 	 * 
-	 * It is typically initialized with a specific browser type (e.g., Chrome, Firefox).
+	 * @return an {@link IActionUI} instance representing the browser driver.
 	 */
-	protected WebDriver driver;
-
-	/**
-     * Default constructor for the DriverManager class.
-     * Initializes a new instance with default values.
-     */
-	protected DriverManager() {
-		// Default constructor does not initialize fields
-	}
-	/**
-	 * Initiates the browser
-	 * 
-	 * @param isHeadlessMode It take boolean value to enable or disable Headless
-	 *                       mode.
-	 */
-	public abstract void launchBrowser(boolean isHeadlessMode);
-
-	/**
-	 * Close the browser window
-	 */
-	public void quitDriver() {
-		if (null != driver) {
-			driver.quit();
-			driver = null;
-		}
-
-	}
-
-	/**
-	 * Get the instance of the browser
-	 * 
-	* @param isHeadlessMode It take boolean value to enable or disable Headless
-	 *                       mode.
-	 * @return it return the driver instance
-	 */
-	public WebDriver getDriver(boolean isHeadlessMode) {
-		if (null == driver) {
-			launchBrowser(isHeadlessMode);
-		}
-		return driver;
-	}
-
+	public abstract IActionUI createBrowser();
 }

@@ -129,7 +129,7 @@ public class APIActionsRestAssured implements IActionAPI {
 			request.contentType(ContentType.TEXT);
 			break;
 		default:
-			 logger.error("Unsupported Content type:{}",contentType);
+			logger.error("Unsupported Content type:{}", contentType);
 		}
 
 	}
@@ -215,7 +215,7 @@ public class APIActionsRestAssured implements IActionAPI {
 	 */
 	@Override
 	public void printResponse() {
-		logger.info("API Response: {}",response);
+		logger.info("API Response: {}", response);
 	}
 
 	/**
