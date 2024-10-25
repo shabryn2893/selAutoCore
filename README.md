@@ -5,5 +5,5 @@
 <dependency>
     <groupId>io.github.shabryn2893</groupId>
     <artifactId>selAutoCore</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.4</version>
 </dependency>

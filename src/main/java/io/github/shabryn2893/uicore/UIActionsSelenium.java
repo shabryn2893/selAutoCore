@@ -668,7 +668,7 @@ public class UIActionsSelenium implements IActionUI {
 		if (combinationKeysName.contains(",")) {
 			String[] keys = combinationKeysName.split(",");
 			action.keyDown(KeysName.getKey(this.driver, keys[0])).sendKeys(keys[1])
-			.keyUp(KeysName.getKey(this.driver, keys[0])).perform();
+					.keyUp(KeysName.getKey(this.driver, keys[0])).perform();
 		} else {
 			action.sendKeys(KeysName.getKey(this.driver, combinationKeysName)).perform();
 		}
